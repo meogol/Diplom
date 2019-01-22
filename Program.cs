@@ -18,7 +18,7 @@ namespace ConsoleApp1
 
         static void Analisys()
         {
-            string solutionPath = @"C:\Users\meogol\source\repos\ConsoleApp1 — копия\ConsoleApp1.sln";//получаем солюшн.Из него возьмем все проджекты, в которых будем искать нужные файлы
+            string solutionPath = @"C:\Users\Вера\source\repos\ConsoleApp1 — копия\ConsoleApp1.sln";//получаем солюшн.Из него возьмем все проджекты, в которых будем искать нужные файлы
             var msWorkspace = MSBuildWorkspace.Create();
             var solution = msWorkspace.OpenSolutionAsync(solutionPath).Result;
             MethodAnalisysWalker methodAnalisysWalker = new MethodAnalisysWalker();
