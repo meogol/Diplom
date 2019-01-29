@@ -14,7 +14,12 @@ namespace ConsoleApp1
 {
     class AnalisysCode : CSharpSyntaxWalker
     {
-
+        /// <summary>
+        /// sModel Семантическая модель предоставляет информацию об объектах и о типах объектов. Получаем из компиляции
+        /// </summary>
+        SemanticModel sModel;
+        EntityInfo entityInfo;
+        public List<EntityInfo> entityInfos { get; set; } = new List<EntityInfo>();
 
         /// <summary>
         /// Компиляция проекта
@@ -44,7 +49,6 @@ namespace ConsoleApp1
 
         /// <summary>
         /// tree-дерево, начатое с указанного узла(node)
-        /// sModel Семантическая модель предоставляет информацию об объектах и о типах объектов. Получаем из компиляции
         /// root- начальная точка обхода дерева
         /// classSymbol- реализует интерфейс Symbol, содержащий информацию об объектах
         /// implementedInterfaces- список интерфейсов
@@ -55,13 +59,18 @@ namespace ConsoleApp1
         {
             var tree = node.SyntaxTree;
             var root = tree.GetRoot();
-            var sModel = compilation.GetSemanticModel(node.SyntaxTree);
+            sModel = compilation.GetSemanticModel(node.SyntaxTree);
             var classSymbol = sModel.GetDeclaredSymbol(root.DescendantNodes().OfType<ClassDeclarationSyntax>().First());
             var implementedInterfaces = classSymbol.AllInterfaces;
-            Console.WriteLine(classSymbol.Name);
+            // Console.WriteLine(classSymbol.Name);
             foreach (var fullNameInterface in implementedInterfaces)
-                if(fullNameInterface.ToString()== typeof(IFieldsEntity).FullName)
+                if (fullNameInterface.ToString() == typeof(IFieldsEntity).FullName)
+                {
+                    entityInfo = new EntityInfo(classSymbol.Name);
+                    entityInfos.Add(entityInfo);
+
                     base.VisitClassDeclaration(node);
+                }
         }
         ///// <summary>
         ///// В этом методе ищим нужный метод и вызываем для него VisitMethodDeclaration, определенный в базовом классе. 
@@ -85,7 +94,7 @@ namespace ConsoleApp1
         /// <param name="sModel"></param>
         /// <param name="identifier">Токен, который мы анализруем. Токены содержут информацию об объектах </param>
         /// <returns></returns>
-        string GetInterfacesNames(SemanticModel sModel, IdentifierNameSyntax identifier)
+        string GetInterfacesNames(IdentifierNameSyntax identifier)
         {
             ITypeSymbol nodeType = sModel.GetTypeInfo(identifier).Type;
             if (nodeType == null)
@@ -111,11 +120,28 @@ namespace ConsoleApp1
             if (nameFilds.Count() != 3)
                 return;
 
-            var fildOne = nameFilds[0];
-            var fildOneParam = nameFilds[1];
-            var fildTwo = nameFilds[2];
-            
-            Console.WriteLine(fildOne + "."+ fildOneParam+"         " + fildTwo);
+            string TypeFildOne = GetInterfacesNames(nameFilds[0]);
+            string TypeFildTwo = GetInterfacesNames(nameFilds[2]);
+            //Console.WriteLine(TypeFildOne + "         "+ TypeFildTwo);
+            if (TypeFildOne != null && TypeFildTwo != null)
+            {
+                var NameFildOne = nameFilds[0];
+                var NameFildOneParam = nameFilds[1];
+                var NameFildTwo = nameFilds[2];
+
+             //   Console.WriteLine(NameFildOne + "." + NameFildOneParam + "         " + NameFildTwo);
+
+                
+                ParamInfo paramInfo = new ParamInfo(NameFildTwo.ToString(), NameFildOneParam.ToString(), TypeFildTwo);
+
+                if (!entityInfo.lFieldInfo.ContainsKey(NameFildOne.ToString()))
+                {
+                    FieldInfo fieldInfo = new FieldInfo(TypeFildOne);
+                    fieldInfo.lParamInfo.Add(paramInfo);
+                    entityInfo.lFieldInfo.Add(NameFildOne.ToString(), fieldInfo);
+                }
+                entityInfo.lFieldInfo[NameFildOne.ToString()].lParamInfo.Add(paramInfo);
+            }
             
         }
     }
