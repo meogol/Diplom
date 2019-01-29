@@ -139,8 +139,8 @@ namespace ConsoleApp1
                     FieldInfo fieldInfo = new FieldInfo(TypeFildOne);
                     fieldInfo.lParamInfo.Add(paramInfo);
                     entityInfo.lFieldInfo.Add(NameFildOne.ToString(), fieldInfo);
-                }
-                entityInfo.lFieldInfo[NameFildOne.ToString()].lParamInfo.Add(paramInfo);
+                }else
+                    entityInfo.lFieldInfo[NameFildOne.ToString()].lParamInfo.Add(paramInfo);
             }
             
         }
