@@ -18,6 +18,7 @@ namespace ConsoleApp1
         /// sModel Семантическая модель предоставляет информацию об объектах и о типах объектов. Получаем из компиляции
         /// </summary>
         SemanticModel sModel;
+
         EntityInfo entityInfo;
         public List<EntityInfo> entityInfos { get; set; } = new List<EntityInfo>();
 
@@ -39,8 +40,6 @@ namespace ConsoleApp1
 
             foreach(var tree in compilation.SyntaxTrees)
             {
-                Console.WriteLine();
-                Console.WriteLine();
                 Visit(tree.GetRoot());
             }
             
@@ -60,58 +59,44 @@ namespace ConsoleApp1
             var tree = node.SyntaxTree;
             var root = tree.GetRoot();
             sModel = compilation.GetSemanticModel(node.SyntaxTree);
-            var classSymbol = sModel.GetDeclaredSymbol(root.DescendantNodes().OfType<ClassDeclarationSyntax>().First());
-            var implementedInterfaces = classSymbol.AllInterfaces;
-            // Console.WriteLine(classSymbol.Name);
-            foreach (var fullNameInterface in implementedInterfaces)
-                if (fullNameInterface.ToString() == typeof(IFieldsEntity).FullName)
-                {
-                    entityInfo = new EntityInfo(classSymbol.Name);
-                    entityInfos.Add(entityInfo);
+            var classSymbol = sModel.GetDeclaredSymbol(node);
+            if(classSymbol.AllInterfaces.Any(i=>i.ToString()==typeof(IFieldsEntity).FullName))
+            {
+                entityInfo = new EntityInfo(classSymbol.Name);
+                entityInfos.Add(entityInfo);
 
-                    base.VisitClassDeclaration(node);
-                }
+                base.VisitClassDeclaration(node);
+            }
         }
-        ///// <summary>
-        ///// В этом методе ищим нужный метод и вызываем для него VisitMethodDeclaration, определенный в базовом классе. 
-        ///// </summary>
-        ///// <param name="node">запрос для исследования дерева. Вызываетс яявнутри Visit</param>
-        //public void VisitMethodDeclaration(SyntaxNode node)
-        //{
-        //    var methods = node.DescendantNodes().OfType<MethodDeclarationSyntax>();
-
-        //    foreach (var method in methods)
-        //    {
-        //        string methodName = method.Identifier.ToString();
-
-        //        base.VisitMethodDeclaration(method);
-        //    }
-        //}
-
+        
         /// <summary>
         /// Получаем информацию о типе токена, после получаем все интерфейсы этого токена и проверяем их
         /// </summary>
-        /// <param name="sModel"></param>
+        /// <param name="interfase">тип интерфейса</param>
         /// <param name="identifier">Токен, который мы анализруем. Токены содержут информацию об объектах </param>
         /// <returns></returns>
-        string GetInterfacesNames(IdentifierNameSyntax identifier)
+
+        bool CheckRealizeInterfase(Type interfase, IdentifierNameSyntax identifier)
         {
             ITypeSymbol nodeType = sModel.GetTypeInfo(identifier).Type;
             if (nodeType == null)
-                return null;
-            foreach (var fullNameInterface in nodeType.Interfaces)
+                return false;
+            foreach (var nameInterface in nodeType.Interfaces)
             {
-                if (fullNameInterface.ToString() == typeof(IFild).FullName)
-                    return nodeType.Name;
+                string fullNameInterface = nameInterface.ToString();
+                if (fullNameInterface == interfase.FullName)
+                {
+                    return true;
+                }
             }
-            return null;
+            return false;
         }
 
         /// <summary>
         /// токены- имена филдов. соответственно первый зависит от последнего.
         /// Так же берем параметр первого объекта, и запоминаем его имя.
-        /// переменные fild...хранят имена переменных
-        /// переменные nameFild... хранят названия типов
+        /// переменные Namefild...хранят имена переменных
+        /// переменные TypeFild... хранят названия типов
         /// </summary>
         /// <param name="node">узел представляет строку операции(fild1.fild2 = fild2;) разбивается на токены, которые мы запоминаем</param>
         public override void VisitExpressionStatement(ExpressionStatementSyntax node)
@@ -120,29 +105,28 @@ namespace ConsoleApp1
             if (nameFilds.Count() != 3)
                 return;
 
-            string TypeFildOne = GetInterfacesNames(nameFilds[0]);
-            string TypeFildTwo = GetInterfacesNames(nameFilds[2]);
-            //Console.WriteLine(TypeFildOne + "         "+ TypeFildTwo);
-            if (TypeFildOne != null && TypeFildTwo != null)
-            {
-                var NameFildOne = nameFilds[0];
-                var NameFildOneParam = nameFilds[1];
-                var NameFildTwo = nameFilds[2];
-
-             //   Console.WriteLine(NameFildOne + "." + NameFildOneParam + "         " + NameFildTwo);
-
-                
-                ParamInfo paramInfo = new ParamInfo(NameFildTwo.ToString(), NameFildOneParam.ToString(), TypeFildTwo);
-
-                if (!entityInfo.lFieldInfo.ContainsKey(NameFildOne.ToString()))
-                {
-                    FieldInfo fieldInfo = new FieldInfo(TypeFildOne);
-                    fieldInfo.lParamInfo.Add(paramInfo);
-                    entityInfo.lFieldInfo.Add(NameFildOne.ToString(), fieldInfo);
-                }else
-                    entityInfo.lFieldInfo[NameFildOne.ToString()].lParamInfo.Add(paramInfo);
-            }
+            var NameFildOne = nameFilds[0];
+            var NameFildOneParam = nameFilds[1];
+            var NameFildTwo = nameFilds[2];
             
+            if (!CheckRealizeInterfase(typeof(IFild), NameFildOne) && !CheckRealizeInterfase(typeof(IFild), NameFildTwo))
+                return;
+
+            var TypeFildOne = sModel.GetTypeInfo(NameFildOne).Type.Name;
+            var TypeFildTwo = sModel.GetTypeInfo(NameFildTwo).Type.Name;
+
+            ParamInfo paramInfo = new ParamInfo(NameFildTwo.ToString(), NameFildOneParam.ToString(), TypeFildTwo);
+
+            if (!entityInfo.lFieldInfo.ContainsKey(NameFildOne.ToString()))
+            {
+                FieldInfo fieldInfo = new FieldInfo(TypeFildOne);
+                fieldInfo.lParamInfo.Add(paramInfo);
+                entityInfo.lFieldInfo.Add(NameFildOne.ToString(), fieldInfo);
+            }
+            else
+                entityInfo.lFieldInfo[NameFildOne.ToString()].lParamInfo.Add(paramInfo);
+
+
         }
     }
 }
