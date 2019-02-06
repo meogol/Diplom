@@ -81,14 +81,9 @@ namespace ConsoleApp1
             ITypeSymbol nodeType = sModel.GetTypeInfo(identifier).Type;
             if (nodeType == null)
                 return false;
-            foreach (var nameInterface in nodeType.Interfaces)
-            {
-                string fullNameInterface = nameInterface.ToString();
-                if (fullNameInterface == interfase.FullName)
-                {
-                    return true;
-                }
-            }
+
+            if (nodeType.Interfaces.Any(i => i.ToString() == interfase.FullName))
+                return true;
             return false;
         }
 
@@ -116,17 +111,19 @@ namespace ConsoleApp1
             var TypeFildTwo = sModel.GetTypeInfo(NameFildTwo).Type.Name;
 
             ParamInfo paramInfo = new ParamInfo(NameFildTwo.ToString(), NameFildOneParam.ToString(), TypeFildTwo);
-
-            if (!entityInfo.lFieldInfo.ContainsKey(NameFildOne.ToString()))
+            
+            FieldInfo fieldInfo;
+            if (entityInfo.lFieldInfo.TryGetValue(NameFildOne.ToString(), out fieldInfo))
             {
-                FieldInfo fieldInfo = new FieldInfo(TypeFildOne);
+                fieldInfo.lParamInfo.RemoveAll(p => p.ParamName == NameFildOneParam.ToString());
+                fieldInfo.lParamInfo.Add(paramInfo);
+            }
+            else
+            {
+                fieldInfo = new FieldInfo(TypeFildOne);
                 fieldInfo.lParamInfo.Add(paramInfo);
                 entityInfo.lFieldInfo.Add(NameFildOne.ToString(), fieldInfo);
             }
-            else
-                entityInfo.lFieldInfo[NameFildOne.ToString()].lParamInfo.Add(paramInfo);
-
-
         }
     }
 }
