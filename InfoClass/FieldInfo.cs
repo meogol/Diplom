@@ -6,24 +6,22 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp1.InfoClass
 {//Она должна содержать список филдов.
-    class FieldInfo//internal class DealFieldDescription
+    public class FieldInfo//internal class DealFieldDescription
     {
-        public String Name { get; } // Amount
-        public String TypeName { get; set; }//тип филда(Fild1, Fild2...)
-        public List<ParamInfo> lParamInfo { get; set; }
+      //  public String Name { get; } // Amount
+        public String TypeField { get; set; }//тип филда(Fild1, Fild2...)
+        public List<ParamInfo> lParamInfo { get; set; } = new List<ParamInfo>();
 
         public FieldInfo() { }
 
-        public FieldInfo(String name, string typeName)
+        public FieldInfo(string typeField)
         {
-            Name = name;
-            TypeName = typeName;
-            lParamInfo = new List<ParamInfo>();
+            TypeField = typeField;
         }
 
         public string str()
         {
-            return Name+" "+TypeName + " " + lParamInfo.Count.ToString();
+            return TypeField + " " + lParamInfo.Count.ToString();
         }
     }
 }

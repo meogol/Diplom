@@ -12,7 +12,7 @@ using ConsoleApp1.InfoClass;
 
 namespace ConsoleApp1
 {
-    class AnalisysCode : CSharpSyntaxWalker
+    public class AnalisysCode : CSharpSyntaxWalker
     {
         /// <summary>
         /// sModel Семантическая модель предоставляет информацию об объектах и о типах объектов. Получаем из компиляции
@@ -21,6 +21,8 @@ namespace ConsoleApp1
 
         EntityInfo entityInfo;
         public List<EntityInfo> entityInfos { get; set; } = new List<EntityInfo>();
+
+        public AnalisysCode() { }
 
         /// <summary>
         /// Компиляция проекта
@@ -105,6 +107,7 @@ namespace ConsoleApp1
             var NameFildTwo = nameFilds[2];
             
             if (!CheckRealizeInterfase(typeof(IFild), NameFildOne) && !CheckRealizeInterfase(typeof(IFild), NameFildTwo))
+            //if (!CheckRealizeInterfase(typeof(IFieldList), NameFildOne) && !CheckRealizeInterfase(typeof(IFieldList), NameFildTwo))
                 return;
 
             var TypeFildOne = sModel.GetTypeInfo(NameFildOne).Type.Name;

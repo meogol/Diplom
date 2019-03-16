@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp1.InfoClass
 {//Каждый филд должн создержать список зависимостей
-    class ParamInfo
+    public class ParamInfo
     {
         public String FieldName { get; set; } // Amount
         public String ParamName { get; set; } // имя филда может отличаться от имени параметра
         public String FieldType { get; set; }
+
+        public ParamInfo()
+        {
+
+        }
 
         public ParamInfo(string fieldName, string paramName, string fieldType)
         {
