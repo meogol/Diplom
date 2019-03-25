@@ -64,7 +64,7 @@ namespace ConsoleApp1
             var classSymbol = sModel.GetDeclaredSymbol(node);
             if(classSymbol.AllInterfaces.Any(i=>i.ToString()==typeof(IFieldsEntity).FullName))
             {
-                entityInfo = new EntityInfo(classSymbol.Name);
+                entityInfo = new EntityInfo(classSymbol.Name, classSymbol.ToString());
                 entityInfos.Add(entityInfo);
 
                 base.VisitClassDeclaration(node);

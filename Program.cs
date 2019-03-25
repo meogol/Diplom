@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using ConsoleApp1.Generator;
 
+//using ConsoleApp1.Generator;
+
 namespace ConsoleApp1
 {
     class Program //BaseListSyntax
@@ -32,7 +34,7 @@ namespace ConsoleApp1
                 //methodAnalisysWalker.ProjectAnalysis(project);
                 analisys.ProjectAnalysis(project);
             }
-            TextTemplate t= new TextTemplate(analisys.entityInfos);
+            T4Generator t= new T4Generator(analisys.entityInfos);
             String tText = t.TransformText();
 
             Console.WriteLine(tText);
