@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
-    class Fild1:IFild
+    public interface IFieldsEntity
     {
-        public Fild2 fild2 { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
-    class Entity
+    class Entity: IFieldsEntity
     {
         static void Main(string[] args)
         {
