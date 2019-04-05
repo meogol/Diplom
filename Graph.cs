@@ -5,85 +5,186 @@ using Egar.Focus.Framework.Types;
 
 namespace ConsoleApp1
 {
-		public class EntityBaseTest_Graph : GraphBase
-	{
-		(ConsoleApp2.EntityBaseTest)Entity;//полное имя к классу entity 
+		
+	public class EntityBaseTest_Graph : GraphBase
+	{	
+		(ConsoleApp2.EntityBaseTest)Entity;
 
-		public EntityBaseTest_Graph(FieldsEntity entity/*, EntityExtentionBase extention*/) :base(entity/*, extention*/)//название entity класса +_Graph в качестве имени
+		public EntityBaseTest_Graph(FieldsEntity entity/*, EntityExtentionBase extention*/) :base(entity/*, extention*/)
 		{
 			this.Entity= (EntityBaseTest)entity;
 		}
+		
+		#region define order
 
-		protected override Dictionary<string, List<CalcFieldInfo>> CreateCalcOrder()
-        {
+		protected Dictionary<string, List<CalcFieldInfo>> CreateCalcOrder()
+		{
 			var calcOrder = new Dictionary<string, List<CalcFieldInfo>>()
 			{
-				#region input order
-				{"", new List<CalcFieldInfo>()
-					{//пройдемся по всем значениям дикшнари с зависимостями.
-						//1 параметр- Entity.+ тип филда, второй- лист зависимостей
-						new CalcFieldInfo(Entity.Fild3, new List<FieldBase>(){Fild1 }),
-											}
-				}
+							#region input order
+                {"", new List<CalcFieldInfo>()
+					{
+										new CalcFieldInfo(fild3, new List<FieldBase>(){}),
+	
+					}
+				},
 				#endregion input order
-			}
-		} 
-	}
-		public class EntityTest_Graph : GraphBase
-	{
-		(ConsoleApp2.EntityTest)Entity;//полное имя к классу entity 
+						
+				
 
-		public EntityTest_Graph(FieldsEntity entity/*, EntityExtentionBase extention*/) :base(entity/*, extention*/)//название entity класса +_Graph в качестве имени
+				
+				#region fild3
+                {"fild3", new List<CalcFieldInfo>()
+					{
+				
+					}
+				},
+				#endregion fild3
+						
+				
+
+				
+			
+			};//new Dictionary
+		 }
+	return calcOrder;
+		}
+	}
+		#endregion //define order
+	
+	public class EntityTest_Graph : GraphBase
+	{	
+		(ConsoleApp2.EntityTest)Entity;
+
+		public EntityTest_Graph(FieldsEntity entity/*, EntityExtentionBase extention*/) :base(entity/*, extention*/)
 		{
 			this.Entity= (EntityTest)entity;
 		}
+		
+		#region define order
 
-		protected override Dictionary<string, List<CalcFieldInfo>> CreateCalcOrder()
-        {
+		protected Dictionary<string, List<CalcFieldInfo>> CreateCalcOrder()
+		{
 			var calcOrder = new Dictionary<string, List<CalcFieldInfo>>()
 			{
-				#region input order
-				{"", new List<CalcFieldInfo>()
-					{//пройдемся по всем значениям дикшнари с зависимостями.
-						//1 параметр- Entity.+ тип филда, второй- лист зависимостей
-						new CalcFieldInfo(Entity.Fild1, new List<FieldBase>(){Fild2 }),
-											}
-				}
+							#region input order
+                {"", new List<CalcFieldInfo>()
+					{
+										new CalcFieldInfo(fild1, new List<FieldBase>(){}),
+	
+					}
+				},
 				#endregion input order
-			}
-		} 
-	}
-		public class Entity_Graph : GraphBase
-	{
-		(ConsoleApp2.Entity)Entity;//полное имя к классу entity 
+						
+				
 
-		public Entity_Graph(FieldsEntity entity/*, EntityExtentionBase extention*/) :base(entity/*, extention*/)//название entity класса +_Graph в качестве имени
+				
+				#region fild1
+                {"fild1", new List<CalcFieldInfo>()
+					{
+				
+					}
+				},
+				#endregion fild1
+						
+				
+
+				
+			
+			};//new Dictionary
+		 }
+	return calcOrder;
+		}
+	}
+		#endregion //define order
+	
+	public class Entity_Graph : GraphBase
+	{	
+		(ConsoleApp2.Entity)Entity;
+
+		public Entity_Graph(FieldsEntity entity/*, EntityExtentionBase extention*/) :base(entity/*, extention*/)
 		{
 			this.Entity= (Entity)entity;
 		}
+		
+		#region define order
 
-		protected override Dictionary<string, List<CalcFieldInfo>> CreateCalcOrder()
-        {
+		protected Dictionary<string, List<CalcFieldInfo>> CreateCalcOrder()
+		{
 			var calcOrder = new Dictionary<string, List<CalcFieldInfo>>()
 			{
-				#region input order
-				{"", new List<CalcFieldInfo>()
-					{//пройдемся по всем значениям дикшнари с зависимостями.
-						//1 параметр- Entity.+ тип филда, второй- лист зависимостей
-						new CalcFieldInfo(Entity.Fild1, new List<FieldBase>(){Fild2 }),
-						//1 параметр- Entity.+ тип филда, второй- лист зависимостей
-						new CalcFieldInfo(Entity.Fild3, new List<FieldBase>(){Fild1 ,
-
-Fild2 }),
-						//1 параметр- Entity.+ тип филда, второй- лист зависимостей
-						new CalcFieldInfo(Entity.TestFild, new List<FieldBase>(){Fild1 }),
-						//1 параметр- Entity.+ тип филда, второй- лист зависимостей
-						new CalcFieldInfo(Entity.Fild3_1, new List<FieldBase>(){Fild3 }),
-											}
-				}
+							#region input order
+                {"", new List<CalcFieldInfo>()
+					{
+										new CalcFieldInfo(fild1, new List<FieldBase>(){}),
+							new CalcFieldInfo(fild3, new List<FieldBase>(){}),
+							new CalcFieldInfo(fild3_1, new List<FieldBase>(){}),
+							new CalcFieldInfo(testFild, new List<FieldBase>(){}),
+	
+					}
+				},
 				#endregion input order
-			}
-		} 
+						
+				
+
+				
+				#region fild1
+                {"fild1", new List<CalcFieldInfo>()
+					{
+										new CalcFieldInfo(fild3, new List<FieldBase>(){}),
+							new CalcFieldInfo(fild3_1, new List<FieldBase>(){}),
+							new CalcFieldInfo(testFild, new List<FieldBase>(){}),
+	
+					}
+				},
+				#endregion fild1
+						
+				
+
+				
+				#region fild3
+                {"fild3", new List<CalcFieldInfo>()
+					{
+										new CalcFieldInfo(fild3_1, new List<FieldBase>(){}),
+							new CalcFieldInfo(testFild, new List<FieldBase>(){}),
+	
+					}
+				},
+				#endregion fild3
+						
+				
+
+				
+				#region testFild
+                {"testFild", new List<CalcFieldInfo>()
+					{
+				
+					}
+				},
+				#endregion testFild
+						
+				
+
+				
+				#region fild3_1
+                {"fild3_1", new List<CalcFieldInfo>()
+					{
+				
+					}
+				},
+				#endregion fild3_1
+						
+				
+
+				
+			
+			};//new Dictionary
+		 }
+	return calcOrder;
+		}
 	}
+		#endregion //define order
+				
+				
 	}
-// List<ParamInfo> lParamInfo- лист зависимостей филда. параметр типа? передается в сгенерированный лист
+}
