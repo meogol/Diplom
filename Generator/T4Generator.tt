@@ -1,10 +1,12 @@
 ﻿<#@ template language="C#" #>
 <#@ assembly name="System.Core" #>
+<#@ assembly Name="$(SolutionDir)\ConsoleApp1\Egar.Focus.Framework.dll" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="ConsoleApp1" #>
 <#@ import namespace="ConsoleApp1.InfoClass" #>
+<#@ import namespace="Egar.Focus.Framework.Utils" #>
 
 using System.Collections.Generic;
 using Egar.Focus.DealModule.Fields;
@@ -14,51 +16,135 @@ namespace ConsoleApp1
 {
 	<#
 		foreach(var entityInfo in entity){
-	#>
+			
+	#>	
 	public class <#=entityInfo.className#>_Graph : GraphBase
-	{
-		(<#= entityInfo.classFullName #>)Entity;//полное имя к классу entity 
+	{	
+		(<#= entityInfo.classFullName #>)Entity;
 
-		public <#=entityInfo.className#>_Graph(FieldsEntity entity/*, EntityExtentionBase extention*/) :base(entity/*, extention*/)//название entity класса +_Graph в качестве имени
+		public <#=entityInfo.className#>_Graph(FieldsEntity entity/*, EntityExtentionBase extention*/) :base(entity/*, extention*/)
 		{
 			this.Entity= (<#= entityInfo.className #>)entity;
 		}
+		
+		#region define order
 
-		protected override Dictionary<string, List<CalcFieldInfo>> CreateCalcOrder()
-        {
+		protected Dictionary<string, List<CalcFieldInfo>> CreateCalcOrder()
+		{
 			var calcOrder = new Dictionary<string, List<CalcFieldInfo>>()
 			{
-				#region input order
-				{"", new List<CalcFieldInfo>()
-					{//пройдемся по всем значениям дикшнари с зависимостями.
-						<#
-							foreach(var field in entityInfo.lFieldInfo.Values){
-						#>//1 параметр- Entity.+ тип филда, второй- лист зависимостей
-						new CalcFieldInfo(Entity.<#= field.TypeField #>, new List<FieldBase>(){<# addField(field.lParamInfo); #>}),
-						<#
-                            }
-						#>
+			<#	
+					var graph =CreateFieldsGraph(entityInfo.lFieldInfo);//граф зависимостей
+					var startFields = new List<string>() {""};//набор стартовых филдов + "" - это типа порядок ввода + когда всю сделку нужно пересчитаться
+					startFields.AddRange(entityInfo.lFieldInfo.Keys);
+					foreach(var startField in startFields)
+					{
+			#>
+				#region <#=startField==""?"input order":startField#>
+                {"<#=startField#>", new List<CalcFieldInfo>()
+					{
+			<#
+			List<string> fieldsToCalc = null;
+			if(startField=="")
+			{
+				fieldsToCalc = new List<string>() {"DealType", "InstrType", "TradeType"}; // хардкод ключевых полей, которые надо в первую очередь установить
+				fieldsToCalc.RemoveAll(f=>!entityInfo.lFieldInfo.ContainsKey(f));
+				List<string> sortOrder = new List<string>(OrientedGraph.TopologicSort(graph, null).Cast<string>().ToList());
+				fieldsToCalc.AddRange(sortOrder.Where(p=> !fieldsToCalc.Contains(p)));
+            }
+			else
+			{
+				OrientedGraph subGraph = OrientedGraph.GetSubGraph(graph, startField, TransOrientation.Out);
+				subGraph.RemoveInTrans(startField);
+				fieldsToCalc = subGraph.RecursiveTopologicSort(startField).Cast<string>().ToList();
+			}
+				
+			var visitedFields=new List<FieldInfo>();//филды в которых мы побывали по ходу расчета
+			if(startField!="")
+				visitedFields.Add(entityInfo.lFieldInfo[startField]);
+			
+			foreach(string fldName in fieldsToCalc)
+			{
+				if(fldName == startField)//граф возвращает стартовый филд в составе цепочки
+					continue;
+				var field = entityInfo.lFieldInfo[fldName];
+				visitedFields.Add(field);
+
+				string funcName = null;// название функции которой необходимо посчитаться
+				var calcFromParams = new List<FieldInfo>();//филды которые привели к пересчету данного филда
+				if(startField!="")
+					visitedFields.Add(entityInfo.lFieldInfo[startField]);
+				
+				
+				var calcFromParamsStr = string.Join(",", calcFromParams.Select(f=>f.Name).ToArray());
+				if(funcName!=null)
+				{
+#>
+							new CalcFieldInfo(<#=fldName#>, (e)=> <#=fldName+"."+funcName#>(e), new List<FieldBase>(){<#=calcFromParamsStr#>}),
+<#
+				}
+				else
+				{
+#>
+							new CalcFieldInfo(<#=fldName#>, new List<FieldBase>(){<#=calcFromParamsStr#>}),
+<#
+				}
+			}//перебор филдов к расчету
+			#>	
+					}
+				},
+				#endregion <#=startField==""?"input order":startField#>
+						
+				
+
+				
+<# 				
+					}
+#>			
+			};//new Dictionary
+		 }
+	return calcOrder;
+		}
+	}
+		#endregion //define order
+<#
+        }//foreach entityInfo
+#>
+				
+				
+	}
+}
+<#+ 
+	/// <summary>
+	/// fields dependencies graph
+	/// </summary>
+	private OrientedGraph CreateFieldsGraph(Dictionary<String, FieldInfo> fields)
+	{
+		OrientedGraph FieldsGraph = new OrientedGraph(); // граф зависимости полей сделки
+		
+		// add graph nodes
+		foreach (var field in fields.Keys)
+		{
+			FieldsGraph.AddNode(field);
+			
+			// add graph transitions
+			foreach (var fieldList in fields.Values)
+			{
+				// nH. Пропустить ребра, направленные в поле, которое изменилось.
+				//if (startField != null && !startField.Equals(field.Name, StringComparison.Ordinal))
+			
+				foreach (var param in fieldList.lParamInfo.Where(p=>!p.IsDeleted))
+				{
+					if (param != null && FieldsGraph.ContainsNode(param.FieldName))
+					{
+						FieldsGraph.AddInTrans(field, param.FieldName);
 					}
 				}
-				#endregion input order
+			
 			}
-		} 
-	}
-	<#
         }
-	#>
-}
-// List<ParamInfo> lParamInfo- лист зависимостей филда. параметр типа? передается в сгенерированный лист
-<#+ 
-	void addField(List<ParamInfo> lParamInfo){
-		int i=0;
-		foreach(var param in lParamInfo)
-		{
-#>
-<#= param.FieldType #> <#+ if(i+1<lParamInfo.Count)#>,
+		return FieldsGraph;
 
-<#+
-			i++;
-        }
-    }
+	}
+
 #>

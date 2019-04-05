@@ -39,6 +39,7 @@ namespace ConsoleApp1
 
             Console.WriteLine(tText);
 
+            System.IO.File.WriteAllText("Graph.cs", tText);
             foreach (var a in analisys.entityInfos)
             {
                 Console.WriteLine(a.className);
@@ -55,7 +56,7 @@ namespace ConsoleApp1
 
             }
 
-
+            
         }
 
 

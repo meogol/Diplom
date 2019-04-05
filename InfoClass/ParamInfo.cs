@@ -11,6 +11,7 @@ namespace ConsoleApp1.InfoClass
         public String FieldName { get; set; } // Amount
         public String ParamName { get; set; } // имя филда может отличаться от имени параметра
         public String FieldType { get; set; }
+        public bool IsDeleted { get; set; }
 
         public ParamInfo()
         {
