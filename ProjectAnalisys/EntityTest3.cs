@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
-    public class EntityBaseTest:IFieldsEntity
+    public class EntityTest3 : EntityTest2
     {
         public virtual void CreateFilds()
         {

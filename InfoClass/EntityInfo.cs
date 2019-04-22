@@ -10,6 +10,10 @@ namespace ConsoleApp1.InfoClass
     public class EntityInfo//internal class DealClassInfo
     {
         /// <summary>
+        /// Имя базового класса
+        /// </summary>
+        public string baseClassName { get; set; }
+        /// <summary>
         /// полное имя класса
         /// </summary>
         public  string classFullName { get; set; }

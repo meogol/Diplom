@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
-    public class Entity: IFieldsEntity
+    public class EntityyTest4 : EntityTest3
     {
-        static void Main(string[] args)
-        {
-            CreateFilds();
-        }
-
+        
         static private void CreateFilds()
         {
             Fild1 fild1=new Fild1();

@@ -24,16 +24,19 @@ namespace ConsoleApp1
 
         static void Analisys()
         {
-            string solutionPath = @"C:\Users\Вера\source\repos\ConsoleApp1 — копия — копия\ConsoleApp1.sln";//получаем солюшн.Из него возьмем все проджекты, в которых будем искать нужные файлы
+            string solutionPath = @"C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1.sln";//получаем солюшн.Из него возьмем все проджекты, в которых будем искать нужные файлы
             var msWorkspace = MSBuildWorkspace.Create();
             var solution = msWorkspace.OpenSolutionAsync(solutionPath).Result;
             AnalisysCode analisys = new AnalisysCode();
+
+            
             foreach (var project in solution.Projects)
             {
                 //methodAnalisysWalker.projectPath = @project.FilePath.Remove(project.FilePath.LastIndexOf(@"\") + 1);
                 //methodAnalisysWalker.ProjectAnalysis(project);
                 analisys.ProjectAnalysis(project);
             }
+
             T4Generator t= new T4Generator(analisys.entityInfos);
             String tText = t.TransformText();
 
@@ -43,7 +46,8 @@ namespace ConsoleApp1
             foreach (var a in analisys.entityInfos)
             {
                 Console.WriteLine(a.className);
-                foreach(var b in a.lFieldInfo.Keys)
+                Console.WriteLine(a.baseClassName);
+                foreach (var b in a.lFieldInfo.Keys)
                 {
                     Console.WriteLine(b + "       " + a.lFieldInfo[b].TypeField);
                     foreach (var c in a.lFieldInfo[b].lParamInfo)
@@ -52,8 +56,6 @@ namespace ConsoleApp1
                     }
                     Console.WriteLine();
                 }
-
-
             }
 
             

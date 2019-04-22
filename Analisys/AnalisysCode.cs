@@ -39,8 +39,8 @@ namespace ConsoleApp1
             compilation = project.GetCompilationAsync().Result;
             
             List<EntityInfo> lEntityInfo = new List<EntityInfo>();
-
-            foreach(var tree in compilation.SyntaxTrees)
+            
+            foreach (var tree in compilation.SyntaxTrees)
             {
                 Visit(tree.GetRoot());
             }
@@ -59,18 +59,23 @@ namespace ConsoleApp1
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {
             var tree = node.SyntaxTree;
-            var root = tree.GetRoot();
             sModel = compilation.GetSemanticModel(node.SyntaxTree);
             var classSymbol = sModel.GetDeclaredSymbol(node);
-            if(classSymbol.AllInterfaces.Any(i=>i.ToString()==typeof(IFieldsEntity).FullName))
+
+            if (classSymbol.AllInterfaces.Any(i => i.ToString() == typeof(IFieldsEntity).FullName))
             {
                 entityInfo = new EntityInfo(classSymbol.Name, classSymbol.ToString());
                 entityInfos.Add(entityInfo);
 
+                var baseClassSyntax = tree.GetRoot().DescendantNodes().OfType<SimpleBaseTypeSyntax>().FirstOrDefault();
+
+                if (baseClassSyntax != null)
+                    entityInfo.baseClassName = baseClassSyntax.ToString();
+                
                 base.VisitClassDeclaration(node);
             }
         }
-        
+
         /// <summary>
         /// Получаем информацию о типе токена, после получаем все интерфейсы этого токена и проверяем их
         /// </summary>
@@ -129,5 +134,7 @@ namespace ConsoleApp1
                 entityInfo.lFieldInfo.Add(NameFildOne.ToString(), fieldInfo);
             }
         }
+
+
     }
 }
