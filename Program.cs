@@ -43,8 +43,11 @@ namespace ConsoleApp1
             Console.WriteLine(tText);
 
             System.IO.File.WriteAllText("Graph.cs", tText);
+
             foreach (var a in analisys.entityInfos)
             {
+                Console.WriteLine();
+                Console.WriteLine();
                 Console.WriteLine(a.className);
                 Console.WriteLine(a.baseClassName);
                 foreach (var b in a.lFieldInfo.Keys)

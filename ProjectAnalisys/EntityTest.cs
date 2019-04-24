@@ -8,14 +8,12 @@ namespace ConsoleApp2
 {
     public class EntityTest : Entity
     {
-        public void CreateFilds()
+        public Fild1 fild1 { get; set; } = new Fild1();
+        public Fild2 fild222 { get; set; } = new Fild2();
+
+        protected  override  void CreateFilds()
         {
-            Fild1 fild1 = new Fild1();
-            Fild2 fild22 = new Fild2();
-
-
-            fild1.fild2 = fild22;
-            
+            fild1.fild2 = fild222;
         }
     }
 }

@@ -67,11 +67,13 @@ namespace ConsoleApp1
                 entityInfo = new EntityInfo(classSymbol.Name, classSymbol.ToString());
                 entityInfos.Add(entityInfo);
 
-                var baseClassSyntax = tree.GetRoot().DescendantNodes().OfType<SimpleBaseTypeSyntax>().FirstOrDefault();
+                var baseClassSyntax = tree.GetRoot().DescendantNodes().OfType<SimpleBaseTypeSyntax>();
 
-                if (baseClassSyntax != null)
-                    entityInfo.baseClassName = baseClassSyntax.ToString();
-                
+
+                if (baseClassSyntax.Where(c => c.ToString() == typeof(IFieldsEntity).Name).FirstOrDefault()==null)//проверка чтобы избежать ситуации, когда в baseClassName попадает IFieldsEntity или имя наследника, когда IFieldsEntity, объявляется после объявления наследника, не реализующего интерфейс.
+                    if (baseClassSyntax.FirstOrDefault() != null)
+                        entityInfo.baseClassName = baseClassSyntax.FirstOrDefault().ToString();
+
                 base.VisitClassDeclaration(node);
             }
         }
