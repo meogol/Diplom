@@ -10,66 +10,61 @@ namespace ConsoleApp1.Generator
     partial class T4Generator
     {
         public List<EntityInfo> entity { get; set; }
+        public List<HierarchyNode> hierarhy { get; set; } = new List<HierarchyNode>();
 
         public T4Generator(List<EntityInfo> Entity)
         {
             entity = Entity;
-            AddBaseField();
             
-        }
-
-        /// <summary>
-        /// Строим иерархию и
-        /// Находим родителя для наследника и проверяем список филдов в наследнике. Если филд уже существует в списке
-        /// наследника, объединяем его зависимости с зависимостями родителя, в противном случае добавляем филд в список
-        /// наследника. Метод выполняется перед началом генерации.
-        /// </summary>
-        private void AddBaseField()
-        {
-            var hierarhi = entity.Where(c => c.baseClassName == null).ToList();
-            entity = BuildHierarhi(hierarhi);
-
-            foreach (var clases in entity)
+            foreach (var entityInfo in entity)
             {
-                var fields = entity.FirstOrDefault(c => c.className == clases.baseClassName);
-                if (fields != null)
+                if(entityInfo.baseClassName==null)
+                    hierarhy.Add(new HierarchyNode(){entity = entityInfo});
+            }
+
+            foreach (var clases in hierarhy)
+            {
+                if (clases.baseClase != null)
                 {
-                    foreach (var baseFields in fields.lFieldInfo.Keys)
+                    foreach (var baseFields in clases.baseClase.lFieldInfo.Keys)
                     {
-                        if (clases.lFieldInfo.ContainsKey(baseFields))
-                            clases.lFieldInfo[baseFields].lParamInfo.Concat(fields.lFieldInfo[baseFields].lParamInfo);
+                        if (clases.entity.lFieldInfo.ContainsKey(baseFields))
+                            clases.entity.lFieldInfo[baseFields].lParamInfo.Concat(clases.baseClase.lFieldInfo[baseFields].lParamInfo);
                         else
-                            clases.lFieldInfo.Add(baseFields, fields.lFieldInfo[baseFields]);
-                        
+                            clases.entity.lFieldInfo.Add(baseFields, clases.baseClase.lFieldInfo[baseFields]);
+
                     }
                 }
             }
+
+            BuildHierarhi(hierarhy);
         }
+
         /// <summary>
-        /// выстраиваем список таким образом, чтобы первыми эллементами были родители, а последними наследники.
-        /// Изначально список содержит только базовые классы. Находим их наследников и добавляем в список, удаляя из начального списка. Продолжаем пока начальный список не станет пустым
+        /// Передаем в метод базовые филды. Находим наследников для каждого базового филда. Если наследники найдены, передаем их в метод. Повторяем, пока наследники не закончатся.
         /// </summary>
-        /// <param name="hierarhi">отсортированный список</param>
+        /// <param name="hierarhi">Список наследников</param>
         /// <returns></returns>
-        private List<EntityInfo> BuildHierarhi(List<EntityInfo> hierarhi)
+        private List<HierarchyNode> BuildHierarhi(List<HierarchyNode> hierarhi)
         {
-            foreach (var entityClass in entity)
+            foreach (var baseClass in hierarhi)
             {
-                if (hierarhi.Where(h=>h.className==entityClass.baseClassName).FirstOrDefault()!=null)
+                var nodes = entity.Where(e => e.baseClassName == baseClass.entity.className).Select(e=>new HierarchyNode() { entity = e, baseClase = baseClass.entity }).ToList();
+                if (nodes != null)
                 {
-                    hierarhi.Add(entityClass);
+                    baseClass.childs = nodes;
+                    BuildHierarhi(nodes);
                 }
             }
 
-            foreach (var baseClases in hierarhi)
-            {
-                entity.Remove(baseClases);
-            }
-
-            if (entity.Count != 0)
-                BuildHierarhi(hierarhi);
-
             return hierarhi;
         }
+    }
+
+    public class HierarchyNode
+    {
+        public EntityInfo entity { get; set; }
+        public  EntityInfo baseClase { get; set; }
+        public  List<HierarchyNode> childs { get; set; }
     }
 }

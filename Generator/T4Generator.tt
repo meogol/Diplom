@@ -15,16 +15,18 @@ using Egar.Focus.Framework.Types;
 namespace ConsoleApp1
 {
 	<#
-		foreach(var entityInfo in entity){
+	foreach(var node in hierarhy)
+	{
+		var classInfo = node.entity;
 			
 	#>	
-	public class <#=entityInfo.className#>_Graph : GraphBase
+	public class <#=classInfo.className#>_Graph : GraphBase
 	{	
-		(<#= entityInfo.classFullName #>)Entity;
+		(<#= classInfo.classFullName #>)Entity;
 
-		public <#=entityInfo.className#>_Graph(FieldsEntity entity/*, EntityExtentionBase extention*/) :base(entity/*, extention*/)
+		public <#=classInfo.className#>_Graph(FieldsEntity entity/*, EntityExtentionBase extention*/) :base(entity/*, extention*/)
 		{
-			this.Entity= (<#= entityInfo.className #>)entity;
+			this.Entity= (<#= classInfo.className #>)entity;
 		}
 		
 		#region define order
@@ -34,9 +36,9 @@ namespace ConsoleApp1
 			var calcOrder = new Dictionary<string, List<CalcFieldInfo>>()
 			{
 			<#	
-					var graph =CreateFieldsGraph(entityInfo.lFieldInfo);//граф зависимостей
+					var graph =CreateFieldsGraph(classInfo.lFieldInfo);//граф зависимостей
 					var startFields = new List<string>() {""};//набор стартовых филдов + "" - это типа порядок ввода + когда всю сделку нужно пересчитаться
-					startFields.AddRange(entityInfo.lFieldInfo.Keys);
+					startFields.AddRange(classInfo.lFieldInfo.Keys);
 					foreach(var startField in startFields)
 					{
 			#>
@@ -48,7 +50,7 @@ namespace ConsoleApp1
 			if(startField=="")
 			{
 				fieldsToCalc = new List<string>() {"DealType", "InstrType", "TradeType"}; // хардкод ключевых полей, которые надо в первую очередь установить
-				fieldsToCalc.RemoveAll(f=>!entityInfo.lFieldInfo.ContainsKey(f));
+				fieldsToCalc.RemoveAll(f=>!classInfo.lFieldInfo.ContainsKey(f));
 				List<string> sortOrder = new List<string>(OrientedGraph.TopologicSort(graph, null).Cast<string>().ToList());
 				fieldsToCalc.AddRange(sortOrder.Where(p=> !fieldsToCalc.Contains(p)));
             }
@@ -61,19 +63,19 @@ namespace ConsoleApp1
 				
 			var visitedFields=new List<FieldInfo>();//филды в которых мы побывали по ходу расчета
 			if(startField!="")
-				visitedFields.Add(entityInfo.lFieldInfo[startField]);
+				visitedFields.Add(classInfo.lFieldInfo[startField]);
 			
 			foreach(string fldName in fieldsToCalc)
 			{
 				if(fldName == startField)//граф возвращает стартовый филд в составе цепочки
 					continue;
-				var field = entityInfo.lFieldInfo[fldName];
+				var field = classInfo.lFieldInfo[fldName];
 				visitedFields.Add(field);
 
 				string funcName = null;// название функции которой необходимо посчитаться
 				var calcFromParams = new List<FieldInfo>();//филды которые привели к пересчету данного филда
 				if(startField!="")
-					visitedFields.Add(entityInfo.lFieldInfo[startField]);
+					visitedFields.Add(classInfo.lFieldInfo[startField]);
 				
 				
 				var calcFromParamsStr = string.Join(",", calcFromParams.Select(f=>f.Name).ToArray());

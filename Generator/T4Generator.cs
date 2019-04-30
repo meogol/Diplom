@@ -36,7 +36,9 @@ namespace ConsoleApp1.Generator
             
             #line 17 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
 
-		foreach(var entityInfo in entity){
+	foreach(var node in hierarhy)
+	{
+		var classInfo = node.entity;
 			
 	
             
@@ -44,30 +46,30 @@ namespace ConsoleApp1.Generator
             #line hidden
             this.Write("\t\r\n\tpublic class ");
             
-            #line 21 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(entityInfo.className));
+            #line 23 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(classInfo.className));
             
             #line default
             #line hidden
             this.Write("_Graph : GraphBase\r\n\t{\t\r\n\t\t(");
             
-            #line 23 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(entityInfo.classFullName));
+            #line 25 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(classInfo.classFullName));
             
             #line default
             #line hidden
             this.Write(")Entity;\r\n\r\n\t\tpublic ");
             
-            #line 25 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(entityInfo.className));
+            #line 27 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(classInfo.className));
             
             #line default
             #line hidden
             this.Write("_Graph(FieldsEntity entity/*, EntityExtentionBase extention*/) :base(entity/*, ex" +
                     "tention*/)\r\n\t\t{\r\n\t\t\tthis.Entity= (");
             
-            #line 27 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(entityInfo.className));
+            #line 29 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(classInfo.className));
             
             #line default
             #line hidden
@@ -75,11 +77,11 @@ namespace ConsoleApp1.Generator
                     "CalcFieldInfo>> CreateCalcOrder()\r\n\t\t{\r\n\t\t\tvar calcOrder = new Dictionary<string" +
                     ", List<CalcFieldInfo>>()\r\n\t\t\t{\r\n\t\t\t");
             
-            #line 36 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            #line 38 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
 	
-					var graph =CreateFieldsGraph(entityInfo.lFieldInfo);//граф зависимостей
+					var graph =CreateFieldsGraph(classInfo.lFieldInfo);//граф зависимостей
 					var startFields = new List<string>() {""};//набор стартовых филдов + "" - это типа порядок ввода + когда всю сделку нужно пересчитаться
-					startFields.AddRange(entityInfo.lFieldInfo.Keys);
+					startFields.AddRange(classInfo.lFieldInfo.Keys);
 					foreach(var startField in startFields)
 					{
 			
@@ -88,27 +90,27 @@ namespace ConsoleApp1.Generator
             #line hidden
             this.Write("\t\t\t\t#region ");
             
-            #line 43 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            #line 45 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(startField==""?"input order":startField));
             
             #line default
             #line hidden
             this.Write("\r\n                {\"");
             
-            #line 44 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            #line 46 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(startField));
             
             #line default
             #line hidden
             this.Write("\", new List<CalcFieldInfo>()\r\n\t\t\t\t\t{\r\n\t\t\t");
             
-            #line 46 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            #line 48 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
 
 			List<string> fieldsToCalc = null;
 			if(startField=="")
 			{
 				fieldsToCalc = new List<string>() {"DealType", "InstrType", "TradeType"}; // хардкод ключевых полей, которые надо в первую очередь установить
-				fieldsToCalc.RemoveAll(f=>!entityInfo.lFieldInfo.ContainsKey(f));
+				fieldsToCalc.RemoveAll(f=>!classInfo.lFieldInfo.ContainsKey(f));
 				List<string> sortOrder = new List<string>(OrientedGraph.TopologicSort(graph, null).Cast<string>().ToList());
 				fieldsToCalc.AddRange(sortOrder.Where(p=> !fieldsToCalc.Contains(p)));
             }
@@ -121,19 +123,19 @@ namespace ConsoleApp1.Generator
 				
 			var visitedFields=new List<FieldInfo>();//филды в которых мы побывали по ходу расчета
 			if(startField!="")
-				visitedFields.Add(entityInfo.lFieldInfo[startField]);
+				visitedFields.Add(classInfo.lFieldInfo[startField]);
 			
 			foreach(string fldName in fieldsToCalc)
 			{
 				if(fldName == startField)//граф возвращает стартовый филд в составе цепочки
 					continue;
-				var field = entityInfo.lFieldInfo[fldName];
+				var field = classInfo.lFieldInfo[fldName];
 				visitedFields.Add(field);
 
 				string funcName = null;// название функции которой необходимо посчитаться
 				var calcFromParams = new List<FieldInfo>();//филды которые привели к пересчету данного филда
 				if(startField!="")
-					visitedFields.Add(entityInfo.lFieldInfo[startField]);
+					visitedFields.Add(classInfo.lFieldInfo[startField]);
 				
 				
 				var calcFromParamsStr = string.Join(",", calcFromParams.Select(f=>f.Name).ToArray());
@@ -145,28 +147,28 @@ namespace ConsoleApp1.Generator
             #line hidden
             this.Write("\t\t\t\t\t\t\tnew CalcFieldInfo(");
             
-            #line 83 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            #line 85 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(fldName));
             
             #line default
             #line hidden
             this.Write(", (e)=> ");
             
-            #line 83 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            #line 85 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(fldName+"."+funcName));
             
             #line default
             #line hidden
             this.Write("(e), new List<FieldBase>(){");
             
-            #line 83 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            #line 85 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(calcFromParamsStr));
             
             #line default
             #line hidden
             this.Write("}),\r\n");
             
-            #line 84 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            #line 86 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
 
 				}
 				else
@@ -177,21 +179,21 @@ namespace ConsoleApp1.Generator
             #line hidden
             this.Write("\t\t\t\t\t\t\tnew CalcFieldInfo(");
             
-            #line 89 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            #line 91 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(fldName));
             
             #line default
             #line hidden
             this.Write(", new List<FieldBase>(){");
             
-            #line 89 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            #line 91 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(calcFromParamsStr));
             
             #line default
             #line hidden
             this.Write("}),\r\n");
             
-            #line 90 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            #line 92 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
 
 				}
 			}//перебор филдов к расчету
@@ -201,14 +203,14 @@ namespace ConsoleApp1.Generator
             #line hidden
             this.Write("\t\r\n\t\t\t\t\t}\r\n\t\t\t\t},\r\n\t\t\t\t#endregion ");
             
-            #line 96 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            #line 98 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(startField==""?"input order":startField));
             
             #line default
             #line hidden
             this.Write("\r\n\t\t\t\t\t\t\r\n\t\t\t\t\r\n\r\n\t\t\t\t\r\n");
             
-            #line 101 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            #line 103 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
  				
 					}
 
@@ -218,7 +220,7 @@ namespace ConsoleApp1.Generator
             this.Write("\t\t\t\r\n\t\t\t};//new Dictionary\r\n\t\t }\r\n\treturn calcOrder;\r\n\t\t}\r\n\t}\r\n\t\t#endregion //def" +
                     "ine order\r\n");
             
-            #line 110 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            #line 112 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
 
         }//foreach entityInfo
 
@@ -229,7 +231,7 @@ namespace ConsoleApp1.Generator
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 117 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+        #line 119 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
  
 	/// <summary>
 	/// fields dependencies graph

@@ -69,8 +69,9 @@ namespace ConsoleApp1
 
                 var baseClassSyntax = tree.GetRoot().DescendantNodes().OfType<SimpleBaseTypeSyntax>();
 
-
-                if (baseClassSyntax.Where(c => c.ToString() == typeof(IFieldsEntity).Name).FirstOrDefault()==null)//проверка чтобы избежать ситуации, когда в baseClassName попадает IFieldsEntity или имя наследника, когда IFieldsEntity, объявляется после объявления наследника, не реализующего интерфейс.
+                //проверка чтобы избежать ситуации, когда в baseClassName попадает IFieldsEntity или имя наследника, когда IFieldsEntity, объявляется после объявления наследника, не реализующего интерфейс. 
+                //class BaseClase: (наследник)class, Iinterfase, IFieldsEntity, условие откинет наследника и первый интерфейс, Оставив поле baseClassName= null
+                if (baseClassSyntax.Where(c => c.ToString() == typeof(IFieldsEntity).Name).FirstOrDefault()==null)
                     if (baseClassSyntax.FirstOrDefault() != null)
                         entityInfo.baseClassName = baseClassSyntax.FirstOrDefault().ToString();
 

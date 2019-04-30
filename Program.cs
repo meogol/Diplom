@@ -37,7 +37,8 @@ namespace ConsoleApp1
                 analisys.ProjectAnalysis(project);
             }
 
-            T4Generator t= new T4Generator(analisys.entityInfos);
+            var entityInfos = analisys.entityInfos;
+            T4Generator t= new T4Generator(entityInfos);
             String tText = t.TransformText();
 
             Console.WriteLine(tText);
