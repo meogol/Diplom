@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
-    public class Entity: IFieldsEntity
+    public class Entity: ParentClassTest, IFieldsEntity, ITest
     {
         public Fild1 Fild1 { get; set; } = new Fild1();
         public Fild2 fild22 { get; set; } = new Fild2();
