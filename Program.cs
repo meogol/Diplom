@@ -27,7 +27,9 @@ namespace ConsoleApp1
             string solutionPath = @"C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1.sln";//получаем солюшн.Из него возьмем все проджекты, в которых будем искать нужные файлы
             var msWorkspace = MSBuildWorkspace.Create();
             var solution = msWorkspace.OpenSolutionAsync(solutionPath).Result;
-            AnalisysCode analisys = new AnalisysCode();
+            Console.WriteLine("Укажите иня базового класса");
+            string className= Console.ReadLine();
+            AnalisysCode analisys = new AnalisysCode(className);
 
             
             foreach (var project in solution.Projects)
