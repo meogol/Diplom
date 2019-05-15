@@ -24,20 +24,24 @@ namespace ConsoleApp1
 
         static void Analisys()
         {
-            string solutionPath = @"C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1.sln";//получаем солюшн.Из него возьмем все проджекты, в которых будем искать нужные файлы
-            var msWorkspace = MSBuildWorkspace.Create();
-            var solution = msWorkspace.OpenSolutionAsync(solutionPath).Result;
-            Console.WriteLine("Укажите иня базового класса");
-            string className= Console.ReadLine();
-            AnalisysCode analisys = new AnalisysCode(className);
+            //string solutionPath = @"C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1.sln";//получаем солюшн.Из него возьмем все проджекты, в которых будем искать нужные файлы
+            //var msWorkspace = MSBuildWorkspace.Create();
+            //var solution = msWorkspace.OpenSolutionAsync(solutionPath).Result;
+            ////Console.WriteLine("Укажите иня базового класса");
+            ////string className= Console.ReadLine();
+            AnalisysCode analisys = new AnalisysCode("Entity");
 
             
-            foreach (var project in solution.Projects)
-            {
-                //methodAnalisysWalker.projectPath = @project.FilePath.Remove(project.FilePath.LastIndexOf(@"\") + 1);
-                //methodAnalisysWalker.ProjectAnalysis(project);
-                analisys.ProjectAnalysis(project);
-            }
+            //foreach (var project in solution.Projects)
+            //{
+            //    //methodAnalisysWalker.projectPath = @project.FilePath.Remove(project.FilePath.LastIndexOf(@"\") + 1);
+            //    //methodAnalisysWalker.ProjectAnalysis(project);
+            //    analisys.ProjectAnalysis(project);
+            //}
+            
+            string projectPath = @"C:\Users\Вера\source\repos\ConsoleApp2\ConsoleApp2\ConsoleApp2.csproj";
+            var Project = MSBuildWorkspace.Create().OpenProjectAsync(projectPath).Result;
+            analisys.ProjectAnalysis(Project);
 
             var entityInfos = analisys.entityInfos;
             T4Generator t= new T4Generator(entityInfos);
