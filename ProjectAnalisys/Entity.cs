@@ -6,31 +6,25 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
-    class Entity
+    public class Entity: ParentClassTest, IFieldsEntity, ITest
     {
-        static void Main(string[] args)
+        public Fild1 Fild1 { get; set; } = new Fild1();
+        public Fild2 fild22 { get; set; } = new Fild2();
+        public Fild3 fild3 { get; set; } = new Fild3();
+        public Fild3_1 fild3_1 { get; set; } = new Fild3_1();
+        public TestFild testFild { get; set; } = new TestFild();
+        public Fild3_2 fild3_2 { get; set; } = new Fild3_2();
+
+        void Main(string[] args)
         {
             CreateFilds();
         }
 
-        static private void CreateFilds()
+        protected virtual void CreateFilds()
         {
-            Fild1 fild1=new Fild1();
-            Fild2 fild22=new Fild2();
-            
-
-            fild1.fild2 = fild22;
-
-            Fild3 fild3 = new Fild3();
-            Fild3_1 fild3_1 = new Fild3_1();
-            
-            fild3.fild1 = fild1;
-
-            TestFild testFild = new TestFild();
-            Fild3_2 fild3_2 = new Fild3_2();
-
-            testFild.fild1 = fild1;
-
+            Fild1.fild2 = fild22;
+            fild3.fild1 = Fild1;
+            testFild.fild1 = Fild1;
             fild3.fild2 = fild22;
             fild3_1.fild3 = fild3;
         }

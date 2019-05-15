@@ -12,15 +12,22 @@ using ConsoleApp1.InfoClass;
 
 namespace ConsoleApp1
 {
-    class AnalisysCode : CSharpSyntaxWalker
+    public class AnalisysCode : CSharpSyntaxWalker
     {
         /// <summary>
         /// sModel Семантическая модель предоставляет информацию об объектах и о типах объектов. Получаем из компиляции
         /// </summary>
         SemanticModel sModel;
-
+        private string BaseClassName { get; set; }
         EntityInfo entityInfo;
         public List<EntityInfo> entityInfos { get; set; } = new List<EntityInfo>();
+
+        public AnalisysCode() { }
+
+        public AnalisysCode(string baseClassName)
+        {
+            BaseClassName = baseClassName;
+        }
 
         /// <summary>
         /// Компиляция проекта
@@ -37,8 +44,8 @@ namespace ConsoleApp1
             compilation = project.GetCompilationAsync().Result;
             
             List<EntityInfo> lEntityInfo = new List<EntityInfo>();
-
-            foreach(var tree in compilation.SyntaxTrees)
+            
+            foreach (var tree in compilation.SyntaxTrees)
             {
                 Visit(tree.GetRoot());
             }
@@ -57,18 +64,31 @@ namespace ConsoleApp1
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {
             var tree = node.SyntaxTree;
-            var root = tree.GetRoot();
             sModel = compilation.GetSemanticModel(node.SyntaxTree);
             var classSymbol = sModel.GetDeclaredSymbol(node);
-            if(classSymbol.AllInterfaces.Any(i=>i.ToString()==typeof(IFieldsEntity).FullName))
+
+            if (classSymbol.AllInterfaces.Any(i => i.ToString() == typeof(IFieldsEntity).FullName))
             {
-                entityInfo = new EntityInfo(classSymbol.Name);
+                entityInfo = new EntityInfo(classSymbol.Name, classSymbol.ToString());
                 entityInfos.Add(entityInfo);
 
+                
+
+                if (classSymbol.Name != BaseClassName)
+                {
+                    var baseClassSyntax = tree.GetRoot().DescendantNodes().OfType<SimpleBaseTypeSyntax>().FirstOrDefault().ToString();
+                    entityInfo.baseClassName = baseClassSyntax;
+                }
+
+                ////проверка чтобы избежать ситуации, когда в baseClassName попадает IFieldsEntity или имя наследника, когда IFieldsEntity, объявляется после объявления наследника, не реализующего интерфейс. 
+                ////class BaseClase: (наследник)class, Iinterfase, IFieldsEntity, условие откинет наследника и первый интерфейс, Оставив поле baseClassName= null
+                //if (baseClassSyntax.FirstOrDefault() != null && baseClassSyntax.Where(c => c.ToString() == typeof(IFieldsEntity).Name).FirstOrDefault()==null )
+                //        entityInfo.baseClassName = baseClassSyntax.FirstOrDefault().ToString();
+                
                 base.VisitClassDeclaration(node);
             }
         }
-        
+
         /// <summary>
         /// Получаем информацию о типе токена, после получаем все интерфейсы этого токена и проверяем их
         /// </summary>
@@ -84,6 +104,7 @@ namespace ConsoleApp1
 
             if (nodeType.Interfaces.Any(i => i.ToString() == interfase.FullName))
                 return true;
+
             return false;
         }
 
@@ -105,6 +126,7 @@ namespace ConsoleApp1
             var NameFildTwo = nameFilds[2];
             
             if (!CheckRealizeInterfase(typeof(IFild), NameFildOne) && !CheckRealizeInterfase(typeof(IFild), NameFildTwo))
+            //if (!CheckRealizeInterfase(typeof(IFieldList), NameFildOne) && !CheckRealizeInterfase(typeof(IFieldList), NameFildTwo))
                 return;
 
             var TypeFildOne = sModel.GetTypeInfo(NameFildOne).Type.Name;
@@ -120,10 +142,13 @@ namespace ConsoleApp1
             }
             else
             {
-                fieldInfo = new FieldInfo(TypeFildOne);
+                
+                fieldInfo = new FieldInfo(NameFildOne.ToString(),TypeFildOne);
                 fieldInfo.lParamInfo.Add(paramInfo);
                 entityInfo.lFieldInfo.Add(NameFildOne.ToString(), fieldInfo);
             }
         }
+
+
     }
 }

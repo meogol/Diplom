@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
-    public class Fild2 : IFild
+   public interface ITest2: IFild
     {
-
     }
 }
+ 

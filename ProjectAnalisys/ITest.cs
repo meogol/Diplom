@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
-    interface ITest
+   public interface ITest: IFild
     {
     }
 }

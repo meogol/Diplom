@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
-    public class Fild2 : IFild
+    public class Mainn
     {
-
+        static void Main(string[] args)
+        {
+        }
     }
 }
