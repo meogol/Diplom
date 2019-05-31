@@ -1,0 +1,344 @@
+класс FutureInitiationEvent
+базовый FutureInitiationEventGen
+
+
+класс FutureInitiationEventGen
+базовый FutureEventBase
+
+
+класс FutureEventBase
+базовый FutureEventBaseGen
+
+
+класс FutureEventBaseGen
+базовый DealEventGenericImpl
+
+
+класс LoanSecuritiesFreePayFeeEvent
+базовый LoanSecuritiesFreeEventGen
+
+
+класс LoanSecuritiesFreeReceiveFeeEvent
+базовый LoanSecuritiesFreeEventGen
+
+
+класс LoanSecuritiesFreeReceiveEvent
+базовый LoanSecuritiesFreeEventGen
+
+
+класс LoanSecuritiesFreePayEvent
+базовый LoanSecuritiesFreeEventGen
+
+
+класс LoanSecuritiesFreeEventGen
+базовый LoanSecuritiesEventBase
+
+
+класс LoanSecuritiesAmzEvent
+базовый LoanSecuritiesCpnEvent
+
+
+класс LoanSecuritiesExerciseEvent
+базовый LoanSecuritiesExerciseEventGen
+
+
+класс LoanSecuritiesExerciseEventGen
+базовый LoanSecuritiesEventBase
+
+
+класс LoanSecuritiesHorizontEvent
+базовый LoanSecuritiesHorizontEventGen
+
+
+класс LoanSecuritiesHorizontEventGen
+базовый LoanSecuritiesEventBase
+
+
+класс LoanSecuritiesRateChangeScheduledEvent
+базовый LoanSecuritiesRateChangeScheduledEventGen
+
+
+класс LoanSecuritiesRateChangeScheduledEventGen
+базовый LoanSecuritiesEventBase
+
+
+класс LoanSecuritiesRateChangeEvent
+базовый LoanSecuritiesRateChangeEventGen
+
+
+класс LoanSecuritiesResetRateEvent
+базовый LoanSecuritiesResetRateEventGen
+
+
+класс LoanSecuritiesResetRateEventGen
+базовый LoanSecuritiesEventBase
+
+
+класс LoanSecuritiesSecuritiesReceiveEvent
+базовый LoanSecuritiesSecuritiesPayEvent
+
+
+класс LoanSecuritiesSecuritiesPayEventGen
+базовый LoanSecuritiesEventBase
+
+
+класс LoanSecuritiesSecuritiesPayEvent
+базовый LoanSecuritiesSecuritiesPayEventGen
+
+
+класс LoanSecuritiesRateChangeEventGen
+базовый LoanSecuritiesEventBase
+
+
+класс LoanSecuritiesValuationEvent
+базовый LoanSecuritiesValuationEventGen
+
+
+класс LoanSecuritiesInterestPaymentEvent
+базовый LoanSecuritiesInterestPaymentEventGen
+
+
+класс LoanSecuritiesValuationEventGen
+базовый LoanSecuritiesEventBase
+
+
+класс LoanSecuritiesInterestPaymentEventGen
+базовый LoanSecuritiesEventBase
+
+
+класс LoanSecuritiesCpnEvent
+базовый LoanSecuritiesCpnAmzEventGen
+
+
+класс LoanSecuritiesEventBase
+базовый LoanSecuritiesEventBaseGen
+
+
+класс LoanSecuritiesCpnAmzEventGen
+базовый LoanSecuritiesEventBase
+
+
+класс LoanSecuritiesInitiationEvent
+базовый LoanSecuritiesInitiationEventGen
+
+
+класс LoanSecuritiesEventBaseGen
+базовый DealEventGenericImpl
+
+
+класс LoanSecuritiesInitiationEventGen
+базовый LoanSecuritiesEventBase
+
+
+класс OptionETEventBase
+базовый OptionETEventBaseGen
+
+
+класс OptionETEventBaseGen
+базовый DealEventGenericImpl
+
+
+класс OptionETInitiationEvent
+базовый OptionETInitiationEventGen
+
+
+класс OptionETInitiationEventGen
+базовый OptionETEventBase
+
+
+класс PNoteInitiationEventGen
+базовый DealEventGenericImpl
+
+
+класс PNoteInitiationEvent
+базовый PNoteInitiationEventGen
+
+
+класс DealEventBase
+базовый FieldsEntity
+
+
+класс DealEventGeneric
+базовый DealEventBase
+
+
+класс DealEventGenericImpl
+базовый DealEventGeneric
+
+
+класс FutureBond
+базовый FutureBase
+
+
+класс FutureEQ
+базовый FutureBase
+
+
+класс FutureBase
+базовый FutureBaseGen
+
+
+класс FutureBaseGen
+базовый DealGenericImpl
+
+
+класс FutureFX
+базовый FutureBase
+
+
+класс LoanSecuritiesBondB2BGen
+базовый LoanSecuritiesBond
+
+
+класс LoanSecuritiesBondB2B
+базовый LoanSecuritiesBondB2BGen
+
+
+класс LoanSecuritiesBondBr2BrGen
+базовый LoanSecuritiesBond
+
+
+класс LoanSecuritiesBondBr2Br
+базовый LoanSecuritiesBondBr2BrGen
+
+
+класс LoanSecuritiesBond
+базовый LoanSecuritiesBondGen
+
+
+класс LoanSecuritiesEquityB2B
+базовый LoanSecuritiesEquityB2BGen
+
+
+класс LoanSecuritiesEquityB2BGen
+базовый LoanSecuritiesEQ
+
+
+класс LoanSecuritiesEquityBr2Br
+базовый LoanSecuritiesEquityBr2BrGen
+
+
+класс LoanSecuritiesEquityBr2BrGen
+базовый LoanSecuritiesEQ
+
+
+класс LoanSecuritiesEQ
+базовый LoanSecuritiesEQGen
+
+
+класс LoanSecuritiesBase
+базовый LoanSecuritiesBaseGen
+
+
+класс LoanSecuritiesBaseGen
+базовый DealGenericImpl
+
+
+класс LoanSecuritiesBondGen
+базовый LoanSecuritiesBase
+
+
+класс LoanSecuritiesEQGen
+базовый LoanSecuritiesBase
+
+
+класс OptionETBondFuture
+базовый OptionETBondFutureGen
+
+
+класс OptionETBondFutureGen
+базовый OptionETBase
+
+
+класс OptionETEquityFutureGen
+базовый OptionETBase
+
+
+класс OptionETEquityFuture
+базовый OptionETEquityFutureGen
+
+
+класс OptionETEquity
+базовый OptionETEquityGen
+
+
+класс OptionETEquityGen
+базовый OptionETBase
+
+
+класс OptionETFXFuture
+базовый OptionETBase
+
+
+класс OptionETBase
+базовый OptionETBaseGen
+
+
+класс OptionETBaseGen
+базовый DealGenericImpl
+
+
+класс SpotForwardPNoteB2B
+базовый SpotForwardPNoteImpl
+
+
+класс SpotForwardPNoteB2BImpl
+базовый SpotForwardPNoteB2B
+
+
+класс SpotForwardPNoteBr2Br
+базовый SpotForwardPNoteImpl
+
+
+класс SpotForwardPNoteBr2BrImpl
+базовый SpotForwardPNoteBr2Br
+
+
+класс DealBase
+базовый FieldsEntity
+
+
+класс DealGeneric
+базовый DealBase
+
+
+класс SpotForwardPNote
+базовый DealGenericImpl
+
+
+класс SpotForwardPNoteImpl
+базовый SpotForwardPNote
+
+
+класс DealGenericImpl
+базовый DealGeneric
+
+
+класс SpotForwardBase
+базовый DealGenericImpl
+
+
+класс FieldsEntity
+базовый
+
+
+класс FieldsEntity
+базовый
+имя changedField      типFieldBase
+зависит от имя StartFieldName     типString     параметрfieldsDict
+
+имя fld      типFieldBase
+зависит от имя fieldContext     типFieldContext     параметрContext
+
+
+
+класс PNoteGroupGen
+базовый PNoteGroupBase
+
+
+класс PNoteGroup
+базовый PNoteGroupGen
+
+
+класс PNoteGroupBase
+базовый FieldsEntity
