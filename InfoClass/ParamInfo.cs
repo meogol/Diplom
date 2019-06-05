@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1.InfoClass
+namespace GraphGeneratorUtil.InfoClass
 {//Каждый филд должн создержать список зависимостей
     public class ParamInfo
     {

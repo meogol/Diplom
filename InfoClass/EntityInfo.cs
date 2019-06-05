@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1.InfoClass
+namespace GraphGeneratorUtil.InfoClass
 {
     //Да, на выходе должна получиться коллекция (в твоем случае из одного элемента) объектов класса 
     public class EntityInfo//internal class DealClassInfo

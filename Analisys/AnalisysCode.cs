@@ -1,25 +1,25 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.MSBuild;
+//using Microsoft.CodeAnalysis.MSBuild;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ConsoleApp2;
-using ConsoleApp1.InfoClass;
+using GraphGeneratorUtil.InfoClass;
+using Egar.Focus.Interface.Servers.TransactionServer;
 
-namespace ConsoleApp1
+namespace GraphGeneratorUtil
 {
     public class AnalisysCode : CSharpSyntaxWalker
     {
         /// <summary>
         /// sModel Семантическая модель предоставляет информацию об объектах и о типах объектов. Получаем из компиляции
         /// </summary>
-        SemanticModel sModel;
-        private string BaseClassName { get; set; }
-        EntityInfo entityInfo;
+        public SemanticModel sModel { get; set; }
+        public string BaseClassName { get; set; }
+        public EntityInfo entityInfo { get; set; }
         public List<EntityInfo> entityInfos { get; set; } = new List<EntityInfo>();
 
         public AnalisysCode() { }
@@ -45,6 +45,8 @@ namespace ConsoleApp1
             
             List<EntityInfo> lEntityInfo = new List<EntityInfo>();
             
+            Console.WriteLine(compilation);
+
             foreach (var tree in compilation.SyntaxTrees)
             {
                 Visit(tree.GetRoot());
@@ -64,17 +66,15 @@ namespace ConsoleApp1
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {
             var tree = node.SyntaxTree;
-            sModel = compilation.GetSemanticModel(node.SyntaxTree);
+            sModel = compilation.GetSemanticModel(tree);
             var classSymbol = sModel.GetDeclaredSymbol(node);
 
             if (classSymbol.AllInterfaces.Any(i => i.ToString() == typeof(IFieldsEntity).FullName))
             {
                 entityInfo = new EntityInfo(classSymbol.Name, classSymbol.ToString());
                 entityInfos.Add(entityInfo);
-
                 
-
-                if (classSymbol.Name != BaseClassName)
+                if (/*classSymbol.Name != BaseClassName*/classSymbol.Name != "FieldsEntity")
                 {
                     var baseClassSyntax = tree.GetRoot().DescendantNodes().OfType<SimpleBaseTypeSyntax>().FirstOrDefault().ToString();
                     entityInfo.baseClassName = baseClassSyntax;
@@ -87,7 +87,9 @@ namespace ConsoleApp1
                 
                 base.VisitClassDeclaration(node);
             }
+            return;
         }
+        
 
         /// <summary>
         /// Получаем информацию о типе токена, после получаем все интерфейсы этого токена и проверяем их
@@ -96,59 +98,67 @@ namespace ConsoleApp1
         /// <param name="identifier">Токен, который мы анализруем. Токены содержут информацию об объектах </param>
         /// <returns></returns>
 
-        bool CheckRealizeInterfase(Type interfase, IdentifierNameSyntax identifier)
+        public bool CheckRealizeInterfase(Type interfase, IdentifierNameSyntax identifier)
         {
             ITypeSymbol nodeType = sModel.GetTypeInfo(identifier).Type;
             if (nodeType == null)
                 return false;
 
-            if (nodeType.Interfaces.Any(i => i.ToString() == interfase.FullName))
+            if (nodeType.AllInterfaces.Any(i => i.ToString() == interfase.FullName))
                 return true;
-
+            
             return false;
         }
 
         /// <summary>
-        /// токены- имена филдов. соответственно первый зависит от последнего.
-        /// Так же берем параметр первого объекта, и запоминаем его имя.
-        /// переменные Namefild...хранят имена переменных
-        /// переменные TypeFild... хранят названия типов
+        /// метод посещает объявления методов. Проверяет название и спускается по жестко указанным узлам(BlockSyntax(все что в фигурных скобках)->ExpressionStatementSyntax(все строка присваивания объекта)->(откидывает ;,this,скобки, по итогу токенов будет лино не 3, либо последний не реализует интерфейс), далее разбивка на токены и их анализ)
         /// </summary>
-        /// <param name="node">узел представляет строку операции(fild1.fild2 = fild2;) разбивается на токены, которые мы запоминаем</param>
-        public override void VisitExpressionStatement(ExpressionStatementSyntax node)
+        /// <param name="node"></param>
+        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
-            var nameFilds = node.DescendantNodes().OfType<IdentifierNameSyntax>().ToList();
-            if (nameFilds.Count() != 3)
+            if (node.Identifier.ToString() != "CreateFields")
                 return;
 
-            var NameFildOne = nameFilds[0];
-            var NameFildOneParam = nameFilds[1];
-            var NameFildTwo = nameFilds[2];
-            
-            if (!CheckRealizeInterfase(typeof(IFild), NameFildOne) && !CheckRealizeInterfase(typeof(IFild), NameFildTwo))
-            //if (!CheckRealizeInterfase(typeof(IFieldList), NameFildOne) && !CheckRealizeInterfase(typeof(IFieldList), NameFildTwo))
-                return;
+            var blocks = node.DescendantNodes().OfType<BlockSyntax>();
 
-            var TypeFildOne = sModel.GetTypeInfo(NameFildOne).Type.Name;
-            var TypeFildTwo = sModel.GetTypeInfo(NameFildTwo).Type.Name;
+            foreach (var block in blocks)
+            {
 
-            ParamInfo paramInfo = new ParamInfo(NameFildTwo.ToString(), NameFildOneParam.ToString(), TypeFildTwo);
-            
-            FieldInfo fieldInfo;
-            if (entityInfo.lFieldInfo.TryGetValue(NameFildOne.ToString(), out fieldInfo))
-            {
-                fieldInfo.lParamInfo.RemoveAll(p => p.ParamName == NameFildOneParam.ToString());
-                fieldInfo.lParamInfo.Add(paramInfo);
-            }
-            else
-            {
-                
-                fieldInfo = new FieldInfo(NameFildOne.ToString(),TypeFildOne);
-                fieldInfo.lParamInfo.Add(paramInfo);
-                entityInfo.lFieldInfo.Add(NameFildOne.ToString(), fieldInfo);
+                var lines = block.DescendantNodes().OfType<ExpressionStatementSyntax>().ToList();
+                foreach (var line in lines)
+                {
+                    var nameFields = line.DescendantNodes().OfType<IdentifierNameSyntax>().ToList();
+                    
+                    if (nameFields.Count() != 3)
+                        continue;
+
+                    var NameFildOne = nameFields[0];
+                    var NameFildOneParam = nameFields[1];
+                    var NameFildTwo = nameFields[2];
+
+                    if (!CheckRealizeInterfase(typeof(IField), NameFildOne) || !CheckRealizeInterfase(typeof(IField), NameFildTwo))
+                        continue;
+
+                    var TypeFildOne = sModel.GetTypeInfo(NameFildOne).Type.Name;
+                    var TypeFildTwo = sModel.GetTypeInfo(NameFildTwo).Type.Name;
+
+                    ParamInfo paramInfo = new ParamInfo(NameFildTwo.ToString(), NameFildOneParam.ToString(), TypeFildTwo);
+
+                    FieldInfo fieldInfo;
+                    if (entityInfo.lFieldInfo.TryGetValue(NameFildOne.ToString(), out fieldInfo))
+                    {
+                        fieldInfo.lParamInfo.RemoveAll(p => p.ParamName == NameFildOneParam.ToString());
+                        fieldInfo.lParamInfo.Add(paramInfo);
+                    }
+                    else
+                    {
+
+                        fieldInfo = new FieldInfo(NameFildOne.ToString(), TypeFildOne);
+                        fieldInfo.lParamInfo.Add(paramInfo);
+                        entityInfo.lFieldInfo.Add(NameFildOne.ToString(), fieldInfo);
+                    }
+                }
             }
         }
-
-
     }
 }

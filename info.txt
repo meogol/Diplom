@@ -44,6 +44,9 @@ base LoanSecuritiesExerciseEventGen
 
 class LoanSecuritiesExerciseEventGen
 base LoanSecuritiesEventBase
+name QtyItems      type FieldDealEventQtyItems
+prent Quantity     type FieldCurrentQty     param Qty
+
 
 
 class LoanSecuritiesHorizontEvent
@@ -72,6 +75,17 @@ base LoanSecuritiesResetRateEventGen
 
 class LoanSecuritiesResetRateEventGen
 base LoanSecuritiesEventBase
+name ReferenceRate      type FieldEventReferenceRate
+prent EventState     type FieldDealEventState     param State
+
+name Spread      type FieldEventRateSpread
+prent ReferenceRate     type FieldEventReferenceRate     param ReferenceRate
+prent ResetRate     type FieldEventResetRate     param ResetRate
+
+name ResetRate      type FieldEventResetRate
+prent Spread     type FieldEventRateSpread     param Spread
+prent ReferenceRate     type FieldEventReferenceRate     param FloatRate
+
 
 
 class LoanSecuritiesSecuritiesReceiveEvent
@@ -80,6 +94,15 @@ base LoanSecuritiesSecuritiesPayEvent
 
 class LoanSecuritiesSecuritiesPayEventGen
 base LoanSecuritiesEventBase
+name Quantity      type FieldCurrentQty
+prent QtyChange     type FieldSecurityChangeQuantity     param QtyChange
+
+name QtyChange      type FieldSecurityChangeQuantity
+prent QtyItemsChange     type FieldDealEventQtyItems     param QtyItems
+
+name QtyItemsChange      type FieldDealEventQtyItems
+prent QtyChange     type FieldSecurityChangeQuantity     param Qty
+
 
 
 class LoanSecuritiesSecuritiesPayEvent
@@ -104,6 +127,15 @@ base LoanSecuritiesEventBase
 
 class LoanSecuritiesInterestPaymentEventGen
 base LoanSecuritiesEventBase
+name Payment      type FieldInterestPayment
+prent InterestDate     type FieldInterestDate     param Date
+
+name InterestPaymentInfo      type FieldDealEventPaymentAbs
+prent Payment     type FieldInterestPayment     param Payment
+
+name CalcPeriodDays      type FieldDealEventCalcPeriodDays
+prent EventDate     type FieldDealEventEventDate     param EventDate
+
 
 
 class LoanSecuritiesCpnEvent
@@ -116,6 +148,9 @@ base LoanSecuritiesEventBaseGen
 
 class LoanSecuritiesCpnAmzEventGen
 base LoanSecuritiesEventBase
+name Payment      type FieldCpnEventInterimPayment
+prent InterimPaymentRate     type FieldRate     param InterimPaymentRate
+
 
 
 class LoanSecuritiesInitiationEvent
@@ -124,6 +159,27 @@ base LoanSecuritiesInitiationEventGen
 
 class LoanSecuritiesEventBaseGen
 base DealEventGenericImpl
+name AmountBase      type FieldAmountBase
+prent Quantity     type FieldCurrentQty     param Qty
+
+name InterestDate      type FieldInterestDate
+prent EventDate     type FieldDealEventEventDate     param EventDate
+prent IsAutoEvent     type FieldBool     param IsAutoEvent
+
+name InterestDue      type FieldInterestDue
+prent InterestDate     type FieldInterestDate     param Date
+
+name EstimatedInterestDue      type FieldEstimatedInterestDue
+prent InterestDate     type FieldInterestDate     param Date
+prent AmountBase     type FieldAmountBase     param AmountBase
+prent EventIRate     type FieldEventIRate     param IRate
+
+name EventDays      type FieldDealEventEventDays
+prent EventDate     type FieldDealEventEventDate     param EventDate
+
+name RateDays      type FieldDealEventRateDays
+prent EventDate     type FieldDealEventEventDate     param EventDate
+
 
 
 class LoanSecuritiesInitiationEventGen
@@ -160,6 +216,10 @@ base FieldsEntity
 
 class DealEventGeneric
 base DealEventBase
+name RegistrationDate      type FieldDealEventRegistrationDate
+prent EventDate     type FieldDealEventEventDate     param EventDate
+prent IsAutoEvent     type FieldBool     param IsAutoEvent
+
 
 
 class DealEventGenericImpl
@@ -180,6 +240,81 @@ base FutureBaseGen
 
 class FutureBaseGen
 base DealGenericImpl
+name ClearingHouseAccount      type FieldClearingHouseAccount
+prent InstrCcy     type FieldCcyInstrList     param Currency
+
+name Custodian      type FieldClearingHouseAndCustodian
+prent Underlying     type FieldUnderlying     param Underlying
+
+name ScaleList      type FieldScaleList
+prent Underlying     type FieldUnderlying     param Instrument
+prent InstrCcy     type FieldCcyInstrList     param PriceCcy
+
+name BrokerComissionCcy      type FieldBrokerComissionCcy
+prent InstrCcy     type FieldCcyInstrList     param Ccy
+
+name BrokerComissionConvRate      type FieldBrokerComissionRate
+prent InstrCcy     type FieldCcyInstrList     param NotionalCcy
+
+name BrokerComission      type FieldBrokerComission
+prent Lots     type FieldLots     param Lots
+prent AmountQuote     type FieldAmountLot     param Amount
+
+name BrokerComissionPercent      type FieldBrokerComissionPercent
+prent Lots     type FieldLots     param Lots
+
+name BrokerComissionNumber      type FieldBrokerComissionPercent
+prent Lots     type FieldLots     param Lots
+
+name CommissionAccount      type Field—ommissionAccount
+prent InstrCcy     type FieldCcyInstrList     param PriceCcy
+prent ComissionExchangeCcy     type FieldCcyCopy     param CommissionCcy
+prent ClearingHouse     type FieldClearingHouseAndBank     param ClearingHouse
+prent ClearingHouseAccount     type FieldClearingHouseAccount     param ClearingHouseAccount
+
+name ComissionExchangeCcy      type FieldCcyCopy
+prent InstrCcy     type FieldCcyInstrList     param Ccy
+
+name ComissionClearingCcy      type FieldCcyCopy
+prent InstrCcy     type FieldCcyInstrList     param Ccy
+
+name TradeFloor      type FieldTradeFloor
+prent Underlying     type FieldUnderlying     param Instr
+
+name Holidays      type FieldHolidays
+prent InstrCcy     type FieldCcyInstrList     param Ccy
+
+name SettlementType      type FieldSettlementTypeByFuture
+prent Underlying     type FieldUnderlying     param Underlying
+
+name Underlying      type FieldUnderlying
+prent InstrType     type FieldInstrType     param InstrType
+
+name InstrCcy      type FieldCcyInstrList
+prent Underlying     type FieldUnderlying     param Underlying
+
+name Isin      type FieldContractIsin
+prent Underlying     type FieldUnderlying     param Instr
+prent Contract     type FieldContract     param Contract
+
+name Contract      type FieldContract
+prent Underlying     type FieldUnderlying     param Underlying
+
+name SetContractDate      type FieldContractDate
+prent Contract     type FieldContract     param Contract
+
+name PriceFrac      type FieldFraction
+prent Underlying     type FieldUnderlying     param Underlying
+
+name AmountQuote      type FieldAmountLot
+prent Lots     type FieldLots     param Lots
+prent Underlying     type FieldUnderlying     param Instr
+
+name Price      type FieldPriceQuote
+prent Lots     type FieldLots     param Lots
+prent PriceFrac     type FieldFraction     param Price
+prent Underlying     type FieldUnderlying     param Underlying
+
 
 
 class FutureFX
@@ -188,6 +323,9 @@ base FutureBase
 
 class LoanSecuritiesBondB2BGen
 base LoanSecuritiesBond
+name Branch      type FieldCtptBranch
+prent TradeType     type FieldTradeType     param TradeType
+
 
 
 class LoanSecuritiesBondB2B
@@ -196,6 +334,14 @@ base LoanSecuritiesBondB2BGen
 
 class LoanSecuritiesBondBr2BrGen
 base LoanSecuritiesBond
+name CustodianAccount_SecondBranch      type FieldCustodianAccount
+prent Custodian_SecondBranch     type FieldClearingHouseAndCustodian     param Custodian
+prent Counterparty     type FieldCtptCounterparty     param Branch
+
+name ClearingHouseAccount_SecondBranch      type FieldClearingHouseAccount
+prent ClearingHouse_SecondBranch     type FieldClearingHouseAndBank     param ClearingHouse
+prent Counterparty     type FieldCtptCounterparty     param Branch
+
 
 
 class LoanSecuritiesBondBr2Br
@@ -212,6 +358,9 @@ base LoanSecuritiesEquityB2BGen
 
 class LoanSecuritiesEquityB2BGen
 base LoanSecuritiesEQ
+name Branch      type FieldCtptBranch
+prent TradeType     type FieldTradeType     param TradeType
+
 
 
 class LoanSecuritiesEquityBr2Br
@@ -220,6 +369,14 @@ base LoanSecuritiesEquityBr2BrGen
 
 class LoanSecuritiesEquityBr2BrGen
 base LoanSecuritiesEQ
+name CustodianAccount_SecondBranch      type FieldCustodianAccount
+prent Custodian_SecondBranch     type FieldClearingHouseAndCustodian     param Custodian
+prent Counterparty     type FieldCtptCounterparty     param Branch
+
+name ClearingHouseAccount_SecondBranch      type FieldClearingHouseAccount
+prent ClearingHouse_SecondBranch     type FieldClearingHouseAndBank     param ClearingHouse
+prent Counterparty     type FieldCtptCounterparty     param Branch
+
 
 
 class LoanSecuritiesEQ
@@ -232,10 +389,166 @@ base LoanSecuritiesBaseGen
 
 class LoanSecuritiesBaseGen
 base DealGenericImpl
+name ClearingHouseAccount      type FieldClearingHouseAccount
+prent PaymentCcy     type FieldCcyCopy     param Currency
+
+name ValueDate      type FieldValueDate
+prent StartDate     type FieldValueDate     param StartDate
+
+name DaysToValue      type FieldTenor
+prent StartDate     type FieldValueDate     param StartDate
+
+name BrokerComissionCcy      type FieldBrokerComissionCcy
+prent PaymentCcy     type FieldCcyCopy     param Ccy
+
+name BrokerComissionConvRate      type FieldBrokerComissionRate
+prent PaymentCcy     type FieldCcyCopy     param NotionalCcy
+
+name BrokerComission      type FieldBrokerComission
+prent Qty     type FieldLoanSecuritiesQty     param Qty
+prent Interest     type FieldLoanSecuritiesInterest     param Amount
+
+name BrokerComissionPercent      type FieldBrokerComissionPercent
+prent Qty     type FieldLoanSecuritiesQty     param Qty
+prent Interest     type FieldLoanSecuritiesInterest     param Amount
+
+name BrokerComissionNumber      type FieldBrokerComissionPercent
+prent Qty     type FieldLoanSecuritiesQty     param Qty
+prent Interest     type FieldLoanSecuritiesInterest     param Amount
+
+name Holidays      type FieldHolidays
+prent HolidaysCcy     type FieldMultipleCcyList     param MultiCcy
+
+name Underlying      type FieldUnderlying
+prent InstrType     type FieldInstrType     param InstrType
+prent Isin     type FieldISIN     param ISIN
+
+name InstrCcy      type FieldCcyInstrList
+prent Underlying     type FieldUnderlying     param Underlying
+
+name Isin      type FieldISIN
+prent Underlying     type FieldUnderlying     param Underlying
+
+name Qty      type FieldLoanSecuritiesQty
+prent Underlying     type FieldUnderlying     param Underlying
+
+name Benchmark      type FieldFloatRateIndex
+prent RateType     type FieldRateType     param RateType
+prent InstrCcy     type FieldCcyInstrList     param Ccy
+prent TradeDate     type FieldDate     param TradeDate
+
+name LinkResetRateTo      type FieldRateChangeLinkTo
+prent RateType     type FieldRateType     param RateType
+
+name ResetRateFrequency      type FieldResetRateFrequency
+prent RateType     type FieldRateType     param RateType
+prent DealType     type FieldDealType     param DealType
+prent Benchmark     type FieldFloatRateIndex     param Benchmark
+prent LinkResetRateTo     type FieldRateChangeLinkTo     param LinkMode
+
+name ResetRateStartDate      type FieldFirstResetRateDate
+prent StartDate     type FieldValueDate     param StartDate
+prent ValueDate     type FieldValueDate     param EndDate
+prent ReportDate     type FieldReportDate     param ReportDate
+prent ResetRateFrequency     type FieldResetRateFrequency     param ResetRateFrequency
+prent DayRule     type FieldDayRule     param AdjRule
+prent Holidays     type FieldHolidays     param Holidays
+prent LinkResetRateTo     type FieldRateChangeLinkTo     param LinkMode
+prent RateType     type FieldRateType     param RateType
+
+name DaysAfterReset      type FieldDaysAfterResetRate
+prent LinkResetRateTo     type FieldRateChangeLinkTo     param LinkResetRateTo
+prent RateType     type FieldRateType     param RateType
+
+name ResetRateSpread      type FieldRateSpread
+prent RateType     type FieldRateType     param RateType
+
+name LinkRateChangeTo      type FieldRateChangeLinkTo
+prent RateType     type FieldRateType     param RateType
+
+name PaymentCcy      type FieldCcyCopy
+prent InstrCcy     type FieldCcyInstrList     param Ccy
+
+name RateChangeFrequency      type FieldRateChangeFrequency
+prent RateType     type FieldRateType     param RateType
+prent DealType     type FieldDealType     param DealType
+prent Benchmark     type FieldFloatRateIndex     param Benchmark
+prent LinkRateChangeTo     type FieldRateChangeLinkTo     param LinkMode
+
+name RateChangeStartDate      type FieldFirstResetRateDate
+prent StartDate     type FieldValueDate     param StartDate
+prent ValueDate     type FieldValueDate     param EndDate
+prent ReportDate     type FieldReportDate     param ReportDate
+prent RateChangeFrequency     type FieldRateChangeFrequency     param ResetRateFrequency
+prent DayRule     type FieldDayRule     param AdjRule
+prent Holidays     type FieldHolidays     param Holidays
+prent LinkRateChangeTo     type FieldRateChangeLinkTo     param LinkMode
+prent RateType     type FieldRateType     param RateType
+
+name RateChangeAveragingMethod      type FieldRateAveragingMethod
+prent LinkRateChangeTo     type FieldRateChangeLinkTo     param LinkRateChangeTo
+prent RateType     type FieldRateType     param RateType
+
+name Basis      type FieldBasis
+prent InstrCcy     type FieldCcyInstrList     param Ccy
+prent DealType     type FieldDealType     param DealType
+
+name StartDate      type FieldValueDate
+prent TradeDate     type FieldDate     param StartDate
+prent Underlying     type FieldUnderlying     param Underlying
+prent DealType     type FieldDealType     param DealType
+prent IsOpen     type FieldBool     param IsOpen
+prent Holidays     type FieldHolidays     param Holidays
+
+name Price      type FieldLoanSecuritiesPrice
+prent InstrType     type FieldInstrType     param InstrType
+prent Underlying     type FieldUnderlying     param Underlying
+
+name DayRule      type FieldDayRule
+prent RateType     type FieldRateType     param RateType
+prent InterestProcess     type FieldInterestProcess     param InterestProcess
+
+name HolidaysCcy      type FieldMultipleCcyList
+prent InstrCcy     type FieldCcyInstrList     param DepCcy
+
+name InterestPaymentFrequency      type FieldInterestPaymentFrequency
+prent DealType     type FieldDealType     param DealType
+prent InterestProcess     type FieldInterestProcess     param InterestProcess
+
+name OperationStartDate      type FieldFirstInterestDate
+prent StartDate     type FieldValueDate     param StartDate
+prent InterestPaymentFrequency     type FieldInterestPaymentFrequency     param PaymentFrequency
+prent InterestProcess     type FieldInterestProcess     param InterestProcess
+prent DayRule     type FieldDayRule     param DayRule
+prent HolidaysCcy     type FieldMultipleCcyList     param HolidayCcy
+
+name InterestWithoutDayRule      type FieldInterestWithoutDayRule
+prent InterestPaymentFrequency     type FieldInterestPaymentFrequency     param PaymentFrequency
+prent DayRule     type FieldDayRule     param DayRule
+
+name UnderlyingInfo      type FieldUnderlyingInfo
+prent Underlying     type FieldUnderlying     param Underlying
+prent AssetInfoDate     type FieldDate     param Date
+
 
 
 class LoanSecuritiesBondGen
 base LoanSecuritiesBase
+name Qty      type FieldLoanSecuritiesQty
+prent QtyItems     type FieldQtyItems     param QtyItems
+
+name QtyUnits      type FieldUnits
+prent InstrCcy     type FieldCcyInstrList     param Source
+
+name QtyItems      type FieldQtyItems
+prent Underlying     type FieldUnderlying     param Underlying
+prent Qty     type FieldLoanSecuritiesQty     param Qty
+
+name Accrued      type FieldAccrued
+prent Underlying     type FieldUnderlying     param Underlying
+prent DeliveryDate     type FieldDeliveryDate     param Date
+prent Qty     type FieldLoanSecuritiesQty     param Qty
+
 
 
 class LoanSecuritiesEQGen
@@ -276,10 +589,131 @@ base OptionETBaseGen
 
 class OptionETBaseGen
 base DealGenericImpl
+name ClearingHouseAccount      type FieldClearingHouseAccount
+prent InstrCcy     type FieldCcyInstrList     param Currency
+
+name Custodian      type FieldClearingHouseAndCustodian
+prent Underlying     type FieldUnderlying     param Underlying
+
+name ScaleList      type FieldScaleList
+prent Underlying     type FieldUnderlying     param Instrument
+prent PremiumCCY     type FieldCcyInstrList     param PriceCcy
+
+name BrokerComissionCcy      type FieldBrokerComissionCcy
+prent PremiumCCY     type FieldCcyInstrList     param Ccy
+
+name BrokerCommissionDate      type FieldBrokerCommissionDate
+prent SettlementDate     type FieldDeivaryDateDer     param DeliveryDate
+prent ExpiryDate     type FieldOptionContractEDate     param ExpiryDate
+
+name BrokerComissionConvRate      type FieldBrokerComissionRate
+prent PremiumCCY     type FieldCcyInstrList     param NotionalCcy
+
+name BrokerComission      type FieldBrokerComission
+prent Lots     type FieldLots     param Lots
+prent AmountQuote     type FieldAmountLot     param Amount
+
+name BrokerComissionPercent      type FieldBrokerComissionPercent
+prent Lots     type FieldLots     param Lots
+prent Premium     type FieldOptionPrem     param ScalePremium
+prent SettlementDate     type FieldDeivaryDateDer     param EndDate
+
+name BrokerComissionNumber      type FieldBrokerComissionPercent
+prent Lots     type FieldLots     param Lots
+prent Premium     type FieldOptionPrem     param ScalePremium
+prent SettlementDate     type FieldDeivaryDateDer     param EndDate
+
+name CommissionAccount      type Field—ommissionAccount
+prent InstrCcy     type FieldCcyInstrList     param PriceCcy
+prent ComissionExchangeCcy     type FieldCcyCopy     param CommissionCcy
+prent ClearingHouse     type FieldClearingHouseAndBank     param ClearingHouse
+prent ClearingHouseAccount     type FieldClearingHouseAccount     param ClearingHouseAccount
+
+name ComissionClearingCcy      type FieldCcyCopy
+prent PremiumCCY     type FieldCcyInstrList     param Ccy
+
+name Holidays      type FieldHolidays
+prent InstrCcy     type FieldCcyInstrList     param Ccy
+
+name Isin      type FieldOptionContractIsin
+prent Underlying     type FieldUnderlying     param Instr
+prent OptionContract     type FieldOptionContract     param OptContract
+prent OptionType     type FieldCallPut     param CallPut
+
+name InstrCcy      type FieldCcyInstrList
+prent Underlying     type FieldUnderlying     param Underlying
+
+name OptionContract      type FieldOptionContract
+prent Underlying     type FieldUnderlying     param Underlying
+
+name ExpiryDate      type FieldOptionContractEDate
+prent OptionContract     type FieldOptionContract     param Contract
+
+name OptionStyle      type FieldAmerEuro
+prent Underlying     type FieldUnderlying     param Instr
+
+name Strike      type FieldStrike
+prent Underlying     type FieldUnderlying     param Underlying
+
+name AmountQuote      type FieldAmountLot
+prent Lots     type FieldLots     param Lots
+prent Underlying     type FieldUnderlying     param Instr
+prent DealType     type FieldDealType     param DealType
+
+name PremiumDate      type FieldDeivaryDateDer
+prent Holidays     type FieldHolidays     param Holidays
+prent Underlying     type FieldUnderlying     param Underlying
+prent TradeDate     type FieldDate     param StartDate
+prent DealType     type FieldDealType     param DealType
+
+name PremiumCCY      type FieldCcyInstrList
+prent Underlying     type FieldUnderlying     param Underlying
+
+name PremiumPricingCcyPair      type FieldCcyPairList
+prent PremiumCCY     type FieldCcyInstrList     param DealingCcy
+prent InstrCcy     type FieldCcyInstrList     param PricingCcy
+
+name PriceFrac      type FieldOptionFraction
+prent Lots     type FieldLots     param Lots
+prent PremiumInPricingCcy     type FieldOptionCost     param Cost
+prent Underlying     type FieldUnderlying     param Underlying
+prent DealType     type FieldDealType     param DealType
+
+name PremiumInPricingCcy      type FieldOptionCost
+prent Lots     type FieldLots     param Lots
+prent Underlying     type FieldUnderlying     param Underlying
+prent PriceFrac     type FieldOptionFraction     param Price
+prent Deal2PaymRate     type FieldCcyCcy2Rate     param Rate
+prent Premium     type FieldOptionPrem     param Premium
+
+name Deal2PaymRate      type FieldCcyCcy2Rate
+prent RateSet     type FieldRatesetsList     param RateSet
+prent TradeDate     type FieldDate     param Date
+prent PremiumCCY     type FieldCcyInstrList     param PaymentCcy
+prent InstrCcy     type FieldCcyInstrList     param NotionalCcy
+
+name Premium      type FieldOptionPrem
+prent Deal2PaymRate     type FieldCcyCcy2Rate     param Rate
+prent Underlying     type FieldUnderlying     param Underlying
+prent DealType     type FieldDealType     param DealType
+prent PremiumInPricingCcy     type FieldOptionCost     param Cost
+
+name SettlementDate      type FieldDeivaryDateDer
+prent Holidays     type FieldHolidays     param Holidays
+prent Underlying     type FieldUnderlying     param Underlying
+prent TradeDate     type FieldDate     param StartDate
+prent DealType     type FieldDealType     param DealType
+
+name SetContractDate      type FieldOptionContractSDate
+prent OptionContract     type FieldOptionContract     param Contract
+
 
 
 class SpotForwardPNoteB2B
 base SpotForwardPNoteImpl
+name Branch      type FieldCtptBranch
+prent TradeType     type FieldTradeType     param TradeType
+
 
 
 class SpotForwardPNoteB2BImpl
@@ -288,6 +722,14 @@ base SpotForwardPNoteB2B
 
 class SpotForwardPNoteBr2Br
 base SpotForwardPNoteImpl
+name CustodianAccount_SecondBranch      type FieldCustodianAccount
+prent Custodian_SecondBranch     type FieldClearingHouseAndCustodian     param Custodian
+prent Counterparty     type FieldCtptCounterparty     param Branch
+
+name ClearingHouseAccount_SecondBranch      type FieldClearingHouseAccount
+prent ClearingHouse_SecondBranch     type FieldClearingHouseAndBank     param ClearingHouse
+prent Counterparty     type FieldCtptCounterparty     param Branch
+
 
 
 class SpotForwardPNoteBr2BrImpl
@@ -300,10 +742,395 @@ base FieldsEntity
 
 class DealGeneric
 base DealBase
+name IsStandard      type FieldIsStandard
+prent TradeType     type FieldTradeType     param TradeType
+
+name TradeTime      type FieldTradeTime
+prent TradeDate     type FieldDate     param DatePart
+
+name Counterparty      type FieldCtptCounterparty
+prent TradeType     type FieldTradeType     param TradeType
+
+name MasterAgreementType      type FieldMasterAgreementType
+prent DealType     type FieldDealType     param DealType
+prent TradeType     type FieldTradeType     param TradeType
+prent IsDealWithoutMasterAgreement     type FieldIsWithoutGenAgreement     param IsDealWithoutMasterAgreement
+prent Counterparty     type FieldCtptCounterparty     param Ctpt
+prent TradeDate     type FieldDate     param Date
+prent MasterAgreementNum     type FieldMasterAgreementList     param MarginAgreement
+prent MarginSystem     type FieldMarginSystem     param MarginSystem
+
+name MasterAgreementNum      type FieldMasterAgreementList
+prent TradeType     type FieldTradeType     param TradeType
+prent MasterAgreementType     type FieldMasterAgreementType     param MasterAgreementType
+prent MarginSystem     type FieldMarginSystem     param MarginSystem
+prent IsDealWithoutMasterAgreement     type FieldIsWithoutGenAgreement     param IsDealWithoutMasterAgreement
+prent Counterparty     type FieldCtptCounterparty     param Ctpt
+prent TradeDate     type FieldDate     param Date
+prent Branch     type FieldCtptBranch     param Branch
+prent DealType     type FieldDealType     param DealType
+prent InstrType     type FieldInstrType     param InstrType
+prent TradeFloor     type FieldTradeFloor     param TradeFloor
+
+name MasterAgreementDate      type FieldMasterAgreementDate
+prent MasterAgreementNum     type FieldMasterAgreementList     param Agreement
+
+name IsDealWithoutMasterAgreement      type FieldIsWithoutGenAgreement
+prent TradeType     type FieldTradeType     param TradeType
+
+name IsForMargin      type FieldIsForMargin
+prent TradeType     type FieldTradeType     param TradeType
+
+name MarginSystem      type FieldMarginSystem
+prent DealType     type FieldDealType     param DealType
+prent TradeType     type FieldTradeType     param TradeType
+prent MasterAgreementType     type FieldMasterAgreementType     param MasterAgreementType
+prent MasterAgreementNum     type FieldMasterAgreementList     param MasterAgreement
+prent PLItem     type FieldPLItem     param PLItem
+prent IsForMargin     type FieldIsForMargin     param IsForMargin
+
+name MarginAgreementNum      type FieldMasterAgreementMarginSumsList
+prent MasterAgreementType     type FieldMasterAgreementType     param MasterAgreementType
+prent MarginSystem     type FieldMarginSystem     param MarginSystem
+prent MasterAgreementNum     type FieldMasterAgreementList     param MasterAgreement
+
+name MarginAgreementDate      type FieldMarginAgreementDate
+prent MarginAgreementNum     type FieldMasterAgreementMarginSumsList     param Agreement
+
+name BusinessStrategy      type FieldBusinessStrategy
+prent DealType     type FieldDealType     param DealType
+prent TradeType     type FieldTradeType     param TradeType
+prent InstrType     type FieldInstrType     param InstrType
+
+name PLItem      type FieldPLItem
+prent Side     type FieldSide     param Side
+prent InstrType     type FieldInstrType     param InstrType
+prent TradeType     type FieldTradeType     param TradeType
+prent DealType     type FieldDealType     param DealType
+
+name Book      type FieldBook
+prent Portfolio     type FieldPortfolio     param Portfolio
+prent CostCenter     type FieldCostCenter     param CostCenter
+prent Branch     type FieldCtptBranch     param Branch
+prent Trader     type FieldDealTrader     param Trader
+
+name Branch      type FieldCtptBranch
+prent Trader     type FieldDealTrader     param Trader
+prent MasterAgreementNum     type FieldMasterAgreementList     param MarginAgreement
+prent Customer     type FieldCtptCustomer     param Customer
+
+name Customer      type FieldCtptCustomer
+prent Branch     type FieldCtptBranch     param Branch
+prent IsAgency     type FieldIsAgency     param IsAgency
+
+name IsAgency      type FieldIsAgency
+prent TradeType     type FieldTradeType     param TradeType
+
+name CostCenter      type FieldCostCenter
+prent Portfolio     type FieldPortfolio     param Portfolio
+prent Branch     type FieldCtptBranch     param Branch
+
+name Portfolio      type FieldPortfolio
+prent Book     type FieldBook     param Book
+prent CostCenter     type FieldCostCenter     param CostCenter
+prent Branch     type FieldCtptBranch     param Branch
+
+name Netting      type FieldNetting
+prent NotNetting     type FieldNotNetting     param NotNetting
+
+name NotNetting      type FieldNotNetting
+prent Netting     type FieldNetting     param Netting
+
+name ClearingHouseAccount      type FieldClearingHouseAccount
+prent DealType     type FieldDealType     param DealType
+prent InstrType     type FieldInstrType     param InstrType
+prent Side     type FieldSide     param Side
+prent ClearingHouse     type FieldClearingHouseAndBank     param ClearingHouse
+prent Counterparty     type FieldCtptCounterparty     param Ctpt
+prent Branch     type FieldCtptBranch     param Branch
+prent MasterAgreementNum     type FieldMasterAgreementList     param MarginAgreement
+
+name CustodianAccount      type FieldCustodianAccount
+prent DealType     type FieldDealType     param DealType
+prent InstrType     type FieldInstrType     param InstrType
+prent Side     type FieldSide     param Side
+prent Custodian     type FieldClearingHouseAndCustodian     param Custodian
+prent Counterparty     type FieldCtptCounterparty     param Ctpt
+prent Branch     type FieldCtptBranch     param Branch
+
+name ValueDate      type FieldValueDate
+prent TradeDate     type FieldDate     param StartDate
+prent DaysToValue     type FieldTenor     param Tenor
+prent Status     type FieldDealStatus     param Status
+prent ReportDate     type FieldReportDate     param HorizonDate
+prent DealType     type FieldDealType     param DealType
+prent InstrType     type FieldInstrType     param InstrType
+
+name DaysToValue      type FieldTenor
+prent TradeDate     type FieldDate     param StartDate
+prent ValueDate     type FieldValueDate     param EndDate
+
+name DeliveryDate      type FieldDeliveryDate
+prent TradeDate     type FieldDate     param StartDate
+prent ValueDate     type FieldValueDate     param ValueDate
+prent DaysToValue     type FieldTenor     param Tenor
+prent Status     type FieldDealStatus     param Status
+
+name DaysToDelivery      type FieldTenor
+prent TradeDate     type FieldDate     param StartDate
+prent DeliveryDate     type FieldDeliveryDate     param EndDate
+
+name Broker      type FieldCtptBroker
+prent Branch     type FieldCtptBranch     param Branch
+
+name BrokerAgreement      type FieldBrokerAgreementList
+prent Counterparty     type FieldCtptCounterparty     param Counterparty
+prent Branch     type FieldCtptBranch     param Branch
+prent Broker     type FieldCtptBroker     param Broker
+prent TradeDate     type FieldDate     param Date
+
+name ScaleList      type FieldScaleList
+prent DealType     type FieldDealType     param DealType
+prent TradeType     type FieldTradeType     param TradeType
+prent InstrType     type FieldInstrType     param IType
+prent TradeDate     type FieldDate     param TradeDate
+prent Side     type FieldSide     param BS
+prent BrokerAgreement     type FieldBrokerAgreementList     param BrokerAgreement
+prent TradeMode     type FieldTradeMode     param TradeMode
+prent BrokerComissionConvRate     type FieldBrokerComissionRate     param ScaleRate
+prent BrokerComission     type FieldBrokerComission     param BrokerComission
+prent BrokerComissionPercent     type FieldBrokerComissionPercent     param BrokerComissionPercent
+prent BrokerComissionNumber     type FieldBrokerComissionPercent     param BrokerComissionNumber
+prent BrokerComissionSide     type FieldBrokerComissionSide     param BrokerComissionSide
+
+name BrokerComissionCcy      type FieldBrokerComissionCcy
+prent ScaleList     type FieldScaleList     param Scale
+prent TradeFloor     type FieldTradeFloor     param TradeFloor
+
+name BrokerCommissionDate      type FieldBrokerCommissionDate
+prent ScaleList     type FieldScaleList     param Scale
+prent BrokerComission     type FieldBrokerComission     param BrokerComission
+prent TradeDate     type FieldDate     param TradeDate
+prent DeliveryDate     type FieldDeliveryDate     param DeliveryDate
+prent TradeDate     type FieldDate     param ExpiryDate
+prent BrokerComissionCcy     type FieldBrokerComissionCcy     param Ccy
+
+name BrokerCommissionPercentOfScale      type FieldBrokerComissionPercentOfScale
+prent BrokerComission     type FieldBrokerComission     param BrokerComission
+prent ScaleList     type FieldScaleList     param Scale
+
+name BrokerComissionConvRate      type FieldBrokerComissionRate
+prent ScaleList     type FieldScaleList     param Scale
+prent TradeDate     type FieldDate     param ScaleDate
+prent BrokerComissionCcy     type FieldBrokerComissionCcy     param PaymentCcy
+prent ValueDate     type FieldValueDate     param Date
+prent RateSet     type FieldRatesetsList     param RateSet
+
+name BrokerComission      type FieldBrokerComission
+prent ScaleList     type FieldScaleList     param Scale
+prent TradeFloor     type FieldTradeFloor     param TradeFloor
+prent TradeDate     type FieldDate     param StartDate
+prent ValueDate     type FieldValueDate     param EndDate
+prent BrokerComissionConvRate     type FieldBrokerComissionRate     param Rate
+prent BrokerComissionPercent     type FieldBrokerComissionPercent     param Percent
+prent BrokerComissionNumber     type FieldBrokerComissionPercent     param ComissionNumber
+
+name BrokerComissionPercent      type FieldBrokerComissionPercent
+prent ScaleList     type FieldScaleList     param Scale
+prent TradeFloor     type FieldTradeFloor     param TradeFloor
+prent BrokerComissionConvRate     type FieldBrokerComissionRate     param Rate
+prent BrokerComission     type FieldBrokerComission     param BrokerComission
+prent TradeDate     type FieldDate     param StartDate
+prent ValueDate     type FieldValueDate     param EndDate
+
+name BrokerComissionNumber      type FieldBrokerComissionPercent
+prent ScaleList     type FieldScaleList     param Scale
+prent TradeFloor     type FieldTradeFloor     param TradeFloor
+prent BrokerComissionConvRate     type FieldBrokerComissionRate     param Rate
+prent BrokerComission     type FieldBrokerComission     param BrokerComission
+prent TradeDate     type FieldDate     param StartDate
+prent ValueDate     type FieldValueDate     param EndDate
+
+name BrokerComissionSide      type FieldBrokerComissionSide
+prent BrokerAgreement     type FieldBrokerAgreementList     param BrokerAgreement
+prent BrokerComission     type FieldBrokerComission     param BrokerComission
+
+name CommissionAccount      type Field—ommissionAccount
+prent Branch     type FieldCtptBranch     param Branch
+prent DealType     type FieldDealType     param DealType
+prent InstrType     type FieldInstrType     param InstrType
+prent Side     type FieldSide     param Side
+prent MasterAgreementNum     type FieldMasterAgreementList     param MarginAgreement
+prent Counterparty     type FieldCtptCounterparty     param Ctpt
+
+name CounterpartyInfo      type FieldCtptInfo
+prent MasterAgreementNum     type FieldMasterAgreementList     param MasterAgreement
+prent TradeDate     type FieldDate     param TradeDate
+prent Counterparty     type FieldCtptCounterparty     param Ctpt
+prent Customer     type FieldCtptCustomer     param Agent
+prent Branch     type FieldCtptBranch     param Branch
+
+name AccountingBasket      type FieldAccountingBasket
+prent CostCenter     type FieldCostCenter     param CostCenter
+prent Book     type FieldBook     param Book
+prent Portfolio     type FieldPortfolio     param Portfolio
+
+name TradeFloorType      type FieldTradeFloorType
+prent TradeFloor     type FieldTradeFloor     param TradeFloor
+
+name EventsSchedule      type FieldEventsScheduleBase
+prent Status     type FieldDealStatus     param TradeStatus
+prent DealType     type FieldDealType     param DealType
+prent TradeID     type FieldTradeId     param TradeId
+prent TradeDate     type FieldDate     param TradeDate
+prent TradeTime     type FieldTradeTime     param TradeTime
+prent Side     type FieldSide     param Side
+prent InstrType     type FieldInstrType     param InstrType
+prent TradeType     type FieldTradeType     param TradeType
+prent IsOpen     type FieldBool     param IsOpen
+prent ReportDate     type FieldReportDate     param ReportDate
+prent IsStandard     type FieldIsStandard     param IsStandard
+prent IsAgency     type FieldIsAgency     param IsAgency
+prent Branch     type FieldCtptBranch     param Branch
+
+name TradeMode      type FieldTradeMode
+prent TradeFloor     type FieldTradeFloor     param TradeFloor
+
+name TradeAuditInfo      type FieldTradeAuditInfo
+prent TradeID     type FieldTradeId     param TradeID
+
+name Holidays      type FieldHolidays
+prent TradeDate     type FieldDate     param StartDate
+
+name OrderTime      type FieldOrderTime
+prent OrderDate     type FieldDate     param OrderDate
+
+name EventStatus      type InitiationLinkedField
+prent EventsSchedule     type FieldEventsScheduleBase     param Schedule
+
+name Executive      type InitiationLinkedField
+prent EventsSchedule     type FieldEventsScheduleBase     param Schedule
+
+name FoStatus      type InitiationLinkedField
+prent EventsSchedule     type FieldEventsScheduleBase     param Schedule
+
+name FoStatusB      type InitiationLinkedField
+prent EventsSchedule     type FieldEventsScheduleBase     param Schedule
+
+name RiskStatus      type InitiationLinkedField
+prent EventsSchedule     type FieldEventsScheduleBase     param Schedule
+
+name BOParametersStatus      type InitiationLinkedField
+prent EventsSchedule     type FieldEventsScheduleBase     param Schedule
+
+name AccountingStatus      type InitiationLinkedField
+prent EventsSchedule     type FieldEventsScheduleBase     param Schedule
+
+name FocusTradeId      type InitiationLinkedField
+prent EventsSchedule     type FieldEventsScheduleBase     param Schedule
+
+name FocusEventId      type InitiationLinkedField
+prent EventsSchedule     type FieldEventsScheduleBase     param Schedule
+
+name RegistrationDate      type InitiationLinkedField
+prent EventsSchedule     type FieldEventsScheduleBase     param Schedule
+
+name FOSystem      type InitiationLinkedField
+prent EventsSchedule     type FieldEventsScheduleBase     param Schedule
+
+name Version      type InitiationLinkedField
+prent EventsSchedule     type FieldEventsScheduleBase     param Schedule
+
+name EventTime      type InitiationLinkedField
+prent EventsSchedule     type FieldEventsScheduleBase     param Schedule
+
+name EventEntryDate      type InitiationLinkedField
+prent EventsSchedule     type FieldEventsScheduleBase     param Schedule
+
 
 
 class SpotForwardPNote
 base DealGenericImpl
+name ClearingHouseAccount      type FieldClearingHouseAccount
+prent PaymentCcy     type FieldCcyCopy     param Currency
+
+name ValueDate      type FieldValueDate
+prent PaymentCcy     type FieldCcyCopy     param Ccy
+prent Holidays     type FieldHolidays     param Holidays
+
+name DaysToValue      type FieldTenor
+prent Holidays     type FieldHolidays     param Holidays
+
+name DeliveryDate      type FieldDeliveryDate
+prent Holidays     type FieldHolidays     param Holidays
+
+name DaysToDelivery      type FieldTenor
+prent Holidays     type FieldHolidays     param Holidays
+
+name ScaleList      type FieldScaleList
+prent PaymentCcy     type FieldCcyCopy     param PriceCcy
+
+name BrokerComissionCcy      type FieldBrokerComissionCcy
+prent PaymentCcy     type FieldCcyCopy     param Ccy
+
+name BrokerComissionConvRate      type FieldBrokerComissionRate
+prent PaymentCcy     type FieldCcyCopy     param NotionalCcy
+
+name BrokerComission      type FieldBrokerComission
+prent QtyItems     type FieldPNoteQty     param Qty
+prent Payment     type FieldPNotePayment     param Amount
+
+name BrokerComissionPercent      type FieldBrokerComissionPercent
+prent QtyItems     type FieldPNoteQty     param Qty
+prent Payment     type FieldPNotePayment     param Amount
+
+name BrokerComissionNumber      type FieldBrokerComissionPercent
+prent QtyItems     type FieldPNoteQty     param Qty
+prent Payment     type FieldPNotePayment     param Amount
+
+name ComissionExchangeCcy      type FieldCcyCopy
+prent PaymentCcy     type FieldCcyCopy     param Ccy
+
+name ComissionTradingSystemCcy      type FieldCcyCopy
+prent PaymentCcy     type FieldCcyCopy     param Ccy
+
+name ComissionCommonCcy      type FieldCcyCopy
+prent PaymentCcy     type FieldCcyCopy     param Ccy
+
+name ComissionClearingCcy      type FieldCcyCopy
+prent PaymentCcy     type FieldCcyCopy     param Ccy
+
+name Holidays      type FieldHolidays
+prent PaymentCcy     type FieldCcyCopy     param Ccy
+
+name QtyItems      type FieldPNoteQty
+prent PNoteGroupsSchedule     type FieldPNoteGroupsSchedule     param PNoteGroupsSchedule
+
+name PNoteAmount      type FieldPNoteAmount
+prent PNoteGroupsSchedule     type FieldPNoteGroupsSchedule     param PNoteGroupsSchedule
+
+name DealAmount      type FieldPNoteDealAmount
+prent PNoteGroupsSchedule     type FieldPNoteGroupsSchedule     param PNoteGroupsSchedule
+
+name PaymentCcy      type FieldCcyCopy
+prent InstrCcy     type FieldCcyList     param Ccy
+
+name InstrCurrencyRate      type FieldCcyCcy2Rate
+prent InstrCcy     type FieldCcyList     param NotionalCcy
+prent PaymentCcy     type FieldCcyCopy     param PaymentCcy
+prent TradeDate     type FieldDate     param Date
+
+name Payment      type FieldPNotePayment
+prent DealAmount     type FieldPNoteDealAmount     param PaymentInstrCcy
+prent InstrCurrencyRate     type FieldCcyCcy2Rate     param Rate
+
+name PNoteGroupsSchedule      type FieldPNoteGroupsSchedule
+prent InstrCcy     type FieldCcyList     param InstrCcy
+prent TradeDate     type FieldDate     param TradeDate
+prent DeliveryDate     type FieldDeliveryDate     param DeliveryDate
+prent PNoteGroupType     type FieldPNoteGroupType     param PNoteGroupType
+prent InstrCurrencyRate     type FieldCcyCcy2Rate     param InstrCurrencyRate
+
 
 
 class SpotForwardPNoteImpl
@@ -312,6 +1139,9 @@ base SpotForwardPNote
 
 class DealGenericImpl
 base DealGeneric
+name EventsSchedule      type FieldEventsScheduleBase
+prent OpenAsEvent     type FieldOpenedAsEvent     param Visible
+
 
 
 class SpotForwardBase
@@ -324,16 +1154,62 @@ base
 
 class FieldsEntity
 base
-name changedField      ÚËÔFieldBase
-depends name StartFieldName     ÚËÔString     Ô‡‡ÏÂÚfieldsDict
-
-name fld      ÚËÔFieldBase
-depends name fieldContext     ÚËÔFieldContext     Ô‡‡ÏÂÚContext
-
 
 
 class PNoteGroupGen
 base PNoteGroupBase
+name Issuer      type FieldPNoteIssuer
+prent Asset     type FieldPNoteAsset     param Asset
+
+name InstrCcy      type FieldPNoteGroupInstrCcy
+prent Asset     type FieldPNoteAsset     param Asset
+
+name TradeAmount      type FieldPNoteTradeAmount
+prent Lots     type FieldPNoteLots     param Lots
+prent Nominal     type FieldPNoteNominal     param Nominal
+
+name Nominal      type FieldPNoteNominal
+prent TradeAmount     type FieldPNoteTradeAmount     param TradeAmount
+prent Lots     type FieldPNoteLots     param Lots
+
+name MaturityDate      type FieldPNoteMaturityDate
+prent Asset     type FieldPNoteAsset     param Asset
+
+name IsInterest      type FieldPNoteIsInterest
+prent Asset     type FieldPNoteAsset     param Asset
+
+name Interest      type FieldPNoteInterest
+prent Asset     type FieldPNoteAsset     param Asset
+
+name StartInterestDate      type FieldPNoteInterestStartDate
+prent Asset     type FieldPNoteAsset     param Asset
+
+name EndInterestDate      type FieldPNoteInterestEndDate
+prent Asset     type FieldPNoteAsset     param Asset
+
+name RefPrice      type FieldPNoteRefPrice
+prent Price     type FieldPNotePrice     param Price
+prent IsInterest     type FieldPNoteIsInterest     param IsInterest
+prent StartInterestDate     type FieldPNoteInterestStartDate     param StartInterestDate
+prent EndInterestDate     type FieldPNoteInterestEndDate     param EndInterestDate
+prent Interest     type FieldPNoteInterest     param Interest
+prent MaturityDate     type FieldPNoteMaturityDate     param MaturityDate
+
+name Price      type FieldPNotePrice
+prent RefPrice     type FieldPNoteRefPrice     param RefPrice
+prent IsInterest     type FieldPNoteIsInterest     param IsInterest
+prent StartInterestDate     type FieldPNoteInterestStartDate     param StartInterestDate
+prent EndInterestDate     type FieldPNoteInterestEndDate     param EndInterestDate
+prent Interest     type FieldPNoteInterest     param Interest
+prent MaturityDate     type FieldPNoteMaturityDate     param MaturityDate
+
+name Amount      type FieldPNoteAmount
+prent Price     type FieldPNotePrice     param Price
+prent TradeAmount     type FieldPNoteTradeAmount     param TradeAmount
+
+name AmountPaymentCcy      type FieldPNoteAmountPaymentCcy
+prent Amount     type FieldPNoteAmount     param Amount
+
 
 
 class PNoteGroup

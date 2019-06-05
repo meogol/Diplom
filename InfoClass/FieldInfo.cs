@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1.InfoClass
+namespace GraphGeneratorUtil.InfoClass
 {//Она должна содержать список филдов.
     public class FieldInfo//internal class DealFieldDescription
     {
