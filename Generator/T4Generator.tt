@@ -1,11 +1,11 @@
 ﻿<#@ template language="C#" #>
 <#@ assembly name="System.Core" #>
-
+<#@ assembly Name="$(SolutionDir)\ConsoleApp1\Egar.Focus.Framework.dll" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ import namespace="GraphGeneratorUtil" #>
-<#@ import namespace="GraphGeneratorUtil.InfoClass" #>
+<#@ import namespace="ConsoleApp1" #>
+<#@ import namespace="ConsoleApp1.InfoClass" #>
 <#@ import namespace="Egar.Focus.Framework.Utils" #>
 
 using System.Collections.Generic;
@@ -107,11 +107,13 @@ namespace GraphGeneratorUtil
 		 
 			return calcOrder;
 		}
-	}
 		#endregion //define order
 <#
         }//foreach entityInfo
 #>
+				
+				
+	}
 }
 <#+ 
 	/// <summary>

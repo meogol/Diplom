@@ -21,27 +21,24 @@ namespace GraphGeneratorUtil.Generator
                 if(entityInfo.baseClassName==null)
                     hierarhy.Add(new HierarchyNode(){entity = entityInfo});
             }
-            
-            BuildHierarhi(hierarhy);
 
-            Console.WriteLine("helper");
-            foreach (var a in entity)
+            foreach (var clases in hierarhy)
             {
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine("class " + a.className);
-                Console.WriteLine("base " + a.baseClassName);
-                foreach (var b in a.lFieldInfo.Keys)
+                if (clases.baseClase != null)
                 {
-                    Console.WriteLine("name " + b + "      type " + a.lFieldInfo[b].TypeField);
-                    foreach (var c in a.lFieldInfo[b].lParamInfo)
+                    foreach (var baseFields in clases.baseClase.lFieldInfo.Keys)
                     {
-                        Console.WriteLine("parrent " + c.FieldName + "     type " + c.FieldType + "     param " + c.ParamName);
+                        if (clases.entity.lFieldInfo.ContainsKey(baseFields))
+                            clases.entity.lFieldInfo[baseFields].lParamInfo.Concat(clases.baseClase.lFieldInfo[baseFields].lParamInfo);
+                        else
+                            clases.entity.lFieldInfo.Add(baseFields, clases.baseClase.lFieldInfo[baseFields]);
+
                     }
-                    Console.WriteLine();
                 }
             }
-            Console.WriteLine("helper");
+
+            BuildHierarhi(hierarhy);
+
         }
 
         /// <summary>
@@ -57,22 +54,6 @@ namespace GraphGeneratorUtil.Generator
                 if (nodes != null)
                 {
                     baseClass.childs = nodes;
-
-                    foreach(var childNode in nodes)
-                    {
-                        var childEntity = childNode.entity;
-                        foreach (var nameBaseFld in baseClass.entity.lFieldInfo.Keys)
-                        {
-                            if (childNode.entity.lFieldInfo.Keys.Contains(nameBaseFld))
-                            {
-                                childEntity.lFieldInfo[nameBaseFld].lParamInfo.Concat(baseClass.entity.lFieldInfo[nameBaseFld].lParamInfo);
-                            }
-                            else
-                            {
-                                childEntity.lFieldInfo.Add(nameBaseFld, baseClass.entity.lFieldInfo[nameBaseFld]);
-                            }
-                        }
-                    }
                     BuildHierarhi(nodes);
                 }
             }

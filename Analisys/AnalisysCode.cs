@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-//using Microsoft.CodeAnalysis.MSBuild;
+using Microsoft.CodeAnalysis.MSBuild;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,15 +66,17 @@ namespace GraphGeneratorUtil
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {
             var tree = node.SyntaxTree;
-            sModel = compilation.GetSemanticModel(tree);
+            sModel = compilation.GetSemanticModel(node.SyntaxTree);
             var classSymbol = sModel.GetDeclaredSymbol(node);
 
             if (classSymbol.AllInterfaces.Any(i => i.ToString() == typeof(IFieldsEntity).FullName))
             {
                 entityInfo = new EntityInfo(classSymbol.Name, classSymbol.ToString());
                 entityInfos.Add(entityInfo);
+
                 
-                if (/*classSymbol.Name != BaseClassName*/classSymbol.Name != "FieldsEntity")
+
+                if (classSymbol.Name != BaseClassName)
                 {
                     var baseClassSyntax = tree.GetRoot().DescendantNodes().OfType<SimpleBaseTypeSyntax>().FirstOrDefault().ToString();
                     entityInfo.baseClassName = baseClassSyntax;
@@ -87,9 +89,7 @@ namespace GraphGeneratorUtil
                 
                 base.VisitClassDeclaration(node);
             }
-            return;
         }
-        
 
         /// <summary>
         /// Получаем информацию о типе токена, после получаем все интерфейсы этого токена и проверяем их
@@ -104,61 +104,53 @@ namespace GraphGeneratorUtil
             if (nodeType == null)
                 return false;
 
-            if (nodeType.AllInterfaces.Any(i => i.ToString() == interfase.FullName))
+            if (nodeType.Interfaces.Any(i => i.ToString() == interfase.FullName))
                 return true;
-            
+
             return false;
         }
 
         /// <summary>
-        /// метод посещает объявления методов. Проверяет название и спускается по жестко указанным узлам(BlockSyntax(все что в фигурных скобках)->ExpressionStatementSyntax(все строка присваивания объекта)->(откидывает ;,this,скобки, по итогу токенов будет лино не 3, либо последний не реализует интерфейс), далее разбивка на токены и их анализ)
+        /// токены- имена филдов. соответственно первый зависит от последнего.
+        /// Так же берем параметр первого объекта, и запоминаем его имя.
+        /// переменные Namefild...хранят имена переменных
+        /// переменные TypeFild... хранят названия типов
         /// </summary>
-        /// <param name="node"></param>
-        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+        /// <param name="node">узел представляет строку операции(fild1.fild2 = fild2;) разбивается на токены, которые мы запоминаем</param>
+        public override void VisitExpressionStatement(ExpressionStatementSyntax node)
         {
-            if (node.Identifier.ToString() != "CreateFields")
+            var nameFilds = node.DescendantNodes().OfType<IdentifierNameSyntax>().ToList();
+            if (nameFilds.Count() != 3)
                 return;
 
-            var blocks = node.DescendantNodes().OfType<BlockSyntax>();
+            var NameFildOne = nameFilds[0];
+            var NameFildOneParam = nameFilds[1];
+            var NameFildTwo = nameFilds[2];
+            
+            if (!CheckRealizeInterfase(typeof(IField), NameFildOne) && !CheckRealizeInterfase(typeof(IField), NameFildTwo))
+            //if (!CheckRealizeInterfase(typeof(IFieldList), NameFildOne) && !CheckRealizeInterfase(typeof(IFieldList), NameFildTwo))
+                return;
 
-            foreach (var block in blocks)
+            var TypeFildOne = sModel.GetTypeInfo(NameFildOne).Type.Name;
+            var TypeFildTwo = sModel.GetTypeInfo(NameFildTwo).Type.Name;
+
+            ParamInfo paramInfo = new ParamInfo(NameFildTwo.ToString(), NameFildOneParam.ToString(), TypeFildTwo);
+            
+            FieldInfo fieldInfo;
+            if (entityInfo.lFieldInfo.TryGetValue(NameFildOne.ToString(), out fieldInfo))
             {
-
-                var lines = block.DescendantNodes().OfType<ExpressionStatementSyntax>().ToList();
-                foreach (var line in lines)
-                {
-                    var nameFields = line.DescendantNodes().OfType<IdentifierNameSyntax>().ToList();
-                    
-                    if (nameFields.Count() != 3)
-                        continue;
-
-                    var NameFildOne = nameFields[0];
-                    var NameFildOneParam = nameFields[1];
-                    var NameFildTwo = nameFields[2];
-
-                    if (!CheckRealizeInterfase(typeof(IField), NameFildOne) || !CheckRealizeInterfase(typeof(IField), NameFildTwo))
-                        continue;
-
-                    var TypeFildOne = sModel.GetTypeInfo(NameFildOne).Type.Name;
-                    var TypeFildTwo = sModel.GetTypeInfo(NameFildTwo).Type.Name;
-
-                    ParamInfo paramInfo = new ParamInfo(NameFildTwo.ToString(), NameFildOneParam.ToString(), TypeFildTwo);
-
-                    FieldInfo fieldInfo;
-                    if (entityInfo.lFieldInfo.TryGetValue(NameFildOne.ToString(), out fieldInfo))
-                    {
-                        fieldInfo.lParamInfo.RemoveAll(p => p.ParamName == NameFildOneParam.ToString());
-                        fieldInfo.lParamInfo.Add(paramInfo);
-                    }
-                    else
-                    {
-
-                        fieldInfo = new FieldInfo(NameFildOne.ToString(), TypeFildOne);
-                        fieldInfo.lParamInfo.Add(paramInfo);
-                        entityInfo.lFieldInfo.Add(NameFildOne.ToString(), fieldInfo);
-                    }
-                }
+                fieldInfo.lParamInfo.RemoveAll(p => p.ParamName == NameFildOneParam.ToString());
+                fieldInfo.lParamInfo.Add(paramInfo);
+            }
+            else
+            {
+                
+                fieldInfo = new FieldInfo(NameFildOne.ToString(),TypeFildOne);
+                fieldInfo.lParamInfo.Add(paramInfo);
+                entityInfo.lFieldInfo.Add(NameFildOne.ToString(), fieldInfo);
             }
         }
+
+
     }
 }

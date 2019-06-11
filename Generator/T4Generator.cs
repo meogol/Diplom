@@ -7,13 +7,13 @@
 //     повторного создания кода.
 // </auto-generated>
 // ------------------------------------------------------------------------------
-namespace ConsoleApp1.Generator
+namespace GraphGeneratorUtil.Generator
 {
     using System.Linq;
     using System.Text;
     using System.Collections.Generic;
-    using ConsoleApp1;
-    using ConsoleApp1.InfoClass;
+    using GraphGeneratorUtil;
+    using GraphGeneratorUtil.InfoClass;
     using Egar.Focus.Framework.Utils;
     using System;
     
@@ -32,7 +32,7 @@ namespace ConsoleApp1.Generator
         public virtual string TransformText()
         {
             this.Write("\r\nusing System.Collections.Generic;\r\nusing Egar.Focus.DealModule.Fields;\r\nusing E" +
-                    "gar.Focus.Framework.Types;\r\n\r\nnamespace ConsoleApp1\r\n{\r\n\t");
+                    "gar.Focus.Framework.Types;\r\n\r\nnamespace GraphGeneratorUtil\r\n{\r\n\t");
             
             #line 17 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
 
@@ -217,10 +217,10 @@ namespace ConsoleApp1.Generator
             
             #line default
             #line hidden
-            this.Write("\t\t\t\r\n\t\t\t};//new Dictionary\r\n\t\t }\r\n\treturn calcOrder;\r\n\t\t}\r\n\t}\r\n\t\t#endregion //def" +
-                    "ine order\r\n");
+            this.Write("\t\t\t\r\n\t\t\t};//new Dictionary\r\n\t\t \r\n\t\t\treturn calcOrder;\r\n\t\t}\r\n\t\t#endregion //define" +
+                    " order\r\n");
             
-            #line 112 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+            #line 111 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
 
         }//foreach entityInfo
 
@@ -231,7 +231,7 @@ namespace ConsoleApp1.Generator
             return this.GenerationEnvironment.ToString();
         }
         
-        #line 119 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
+        #line 118 "C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1\Generator\T4Generator.tt"
  
 	/// <summary>
 	/// fields dependencies graph
