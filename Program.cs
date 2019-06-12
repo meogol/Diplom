@@ -4,48 +4,53 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ConsoleApp1.Generator;
+using System.Windows.Forms;
+using GraphGeneratorUtil.Generator;
 
 //using ConsoleApp1.Generator;
 
-namespace ConsoleApp1
+namespace GraphGeneratorUtil
 {
-    class Program //BaseListSyntax
+    public class Program //BaseListSyntax
     {
         static void Main(string[] args)
         {
-            Analisys();
-            
+            GraphGeneratorUtil.Program.Analisys(@"C:\Users\Вера\source\repos\ConsoleApp2\ConsoleApp2\EntityProject.csproj", @"C:\Users\Вера\Desktop\Graph.cs");
+
 
             Console.WriteLine("Completed!");
             Console.ReadKey();
         }
 
 
-        static void Analisys()
+        static public void Analisys(string analisysProjectPath, string outGraphPath)
         {
-            string solutionPath = @"C:\Users\Вера\source\repos\ConsoleApp1\ConsoleApp1.sln";//получаем солюшн.Из него возьмем все проджекты, в которых будем искать нужные файлы
-            var msWorkspace = MSBuildWorkspace.Create();
-            var solution = msWorkspace.OpenSolutionAsync(solutionPath).Result;
-            Console.WriteLine("Укажите иня базового класса");
-            string className= Console.ReadLine();
-            AnalisysCode analisys = new AnalisysCode(className);
+           
+            AnalisysCode analisys = new AnalisysCode("FieldBase");
 
             
-            foreach (var project in solution.Projects)
-            {
-                //methodAnalisysWalker.projectPath = @project.FilePath.Remove(project.FilePath.LastIndexOf(@"\") + 1);
-                //methodAnalisysWalker.ProjectAnalysis(project);
-                analisys.ProjectAnalysis(project);
-            }
+            //путь к анализируемому csproj файлу
+             string projectPath =analisysProjectPath;
 
+            //по указанному пути получаем проджект
+            MSBuildWorkspace msWorkspace = MSBuildWorkspace.Create();
+            var Project = msWorkspace.OpenProjectAsync(projectPath).Result;
+
+            analisys.ProjectAnalysis(Project);
+
+            var diagnostics = msWorkspace.Diagnostics;
+            foreach (var diagnostic in diagnostics)
+            {
+                Console.WriteLine(diagnostic.Message);
+            }
+            
             var entityInfos = analisys.entityInfos;
             T4Generator t= new T4Generator(entityInfos);
             String tText = t.TransformText();
 
             Console.WriteLine(tText);
 
-            System.IO.File.WriteAllText("Graph.cs", tText);
+            System.IO.File.WriteAllText(outGraphPath, tText);
 
             foreach (var a in analisys.entityInfos)
             {

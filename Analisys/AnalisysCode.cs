@@ -7,19 +7,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ConsoleApp2;
-using ConsoleApp1.InfoClass;
+using GraphGeneratorUtil.InfoClass;
+using Egar.Focus.Interface.Servers.TransactionServer;
 
-namespace ConsoleApp1
+namespace GraphGeneratorUtil
 {
     public class AnalisysCode : CSharpSyntaxWalker
     {
         /// <summary>
         /// sModel Семантическая модель предоставляет информацию об объектах и о типах объектов. Получаем из компиляции
         /// </summary>
-        SemanticModel sModel;
-        private string BaseClassName { get; set; }
-        EntityInfo entityInfo;
+        public SemanticModel sModel { get; set; }
+        public string BaseClassName { get; set; }
+        public EntityInfo entityInfo { get; set; }
         public List<EntityInfo> entityInfos { get; set; } = new List<EntityInfo>();
 
         public AnalisysCode() { }
@@ -45,6 +45,8 @@ namespace ConsoleApp1
             
             List<EntityInfo> lEntityInfo = new List<EntityInfo>();
             
+            Console.WriteLine(compilation);
+
             foreach (var tree in compilation.SyntaxTrees)
             {
                 Visit(tree.GetRoot());
@@ -96,7 +98,7 @@ namespace ConsoleApp1
         /// <param name="identifier">Токен, который мы анализруем. Токены содержут информацию об объектах </param>
         /// <returns></returns>
 
-        bool CheckRealizeInterfase(Type interfase, IdentifierNameSyntax identifier)
+        public bool CheckRealizeInterfase(Type interfase, IdentifierNameSyntax identifier)
         {
             ITypeSymbol nodeType = sModel.GetTypeInfo(identifier).Type;
             if (nodeType == null)
@@ -125,7 +127,7 @@ namespace ConsoleApp1
             var NameFildOneParam = nameFilds[1];
             var NameFildTwo = nameFilds[2];
             
-            if (!CheckRealizeInterfase(typeof(IFild), NameFildOne) && !CheckRealizeInterfase(typeof(IFild), NameFildTwo))
+            if (!CheckRealizeInterfase(typeof(IField), NameFildOne) && !CheckRealizeInterfase(typeof(IField), NameFildTwo))
             //if (!CheckRealizeInterfase(typeof(IFieldList), NameFildOne) && !CheckRealizeInterfase(typeof(IFieldList), NameFildTwo))
                 return;
 

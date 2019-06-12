@@ -1,18 +1,19 @@
 
+
 using System.Collections.Generic;
 using Egar.Focus.DealModule.Fields;
 using Egar.Focus.Framework.Types;
 
-namespace ConsoleApp1
+namespace GraphGeneratorUtil
 {
 		
-	public class EntityBaseTest_Graph : GraphBase
+	public class FieldsEntity_Graph : GraphBase
 	{	
-		(ConsoleApp2.EntityBaseTest)Entity;
+		(Egar.Focus.DealModule.FieldsEntity)Entity;
 
-		public EntityBaseTest_Graph(FieldsEntity entity/*, EntityExtentionBase extention*/) :base(entity/*, extention*/)
+		public FieldsEntity_Graph(FieldsEntity entity/*, EntityExtentionBase extention*/) :base(entity/*, extention*/)
 		{
-			this.Entity= (EntityBaseTest)entity;
+			this.Entity= (FieldsEntity)entity;
 		}
 		
 		#region define order
@@ -24,8 +25,7 @@ namespace ConsoleApp1
 							#region input order
                 {"", new List<CalcFieldInfo>()
 					{
-										new CalcFieldInfo(fild3, new List<FieldBase>(){}),
-	
+				
 					}
 				},
 				#endregion input order
@@ -33,32 +33,21 @@ namespace ConsoleApp1
 				
 
 				
-				#region fild3
-                {"fild3", new List<CalcFieldInfo>()
-					{
-				
-					}
-				},
-				#endregion fild3
-						
-				
-
-				
 			
 			};//new Dictionary
-		 }
-	return calcOrder;
+		 
+			return calcOrder;
 		}
 	}
 		#endregion //define order
 	
-	public class Entity_Graph : GraphBase
+	public class FieldsEntity_Graph : GraphBase
 	{	
-		(ConsoleApp2.Entity)Entity;
+		(Egar.Focus.DealModule.FieldsEntity)Entity;
 
-		public Entity_Graph(FieldsEntity entity/*, EntityExtentionBase extention*/) :base(entity/*, extention*/)
+		public FieldsEntity_Graph(FieldsEntity entity/*, EntityExtentionBase extention*/) :base(entity/*, extention*/)
 		{
-			this.Entity= (Entity)entity;
+			this.Entity= (FieldsEntity)entity;
 		}
 		
 		#region define order
@@ -70,10 +59,8 @@ namespace ConsoleApp1
 							#region input order
                 {"", new List<CalcFieldInfo>()
 					{
-										new CalcFieldInfo(Fild1, new List<FieldBase>(){}),
-							new CalcFieldInfo(fild3, new List<FieldBase>(){}),
-							new CalcFieldInfo(fild3_1, new List<FieldBase>(){}),
-							new CalcFieldInfo(testFild, new List<FieldBase>(){}),
+										new CalcFieldInfo(changedField, new List<FieldBase>(){}),
+							new CalcFieldInfo(fld, new List<FieldBase>(){}),
 	
 					}
 				},
@@ -82,63 +69,33 @@ namespace ConsoleApp1
 				
 
 				
-				#region Fild1
-                {"Fild1", new List<CalcFieldInfo>()
+				#region changedField
+                {"changedField", new List<CalcFieldInfo>()
 					{
-										new CalcFieldInfo(fild3, new List<FieldBase>(){}),
-							new CalcFieldInfo(fild3_1, new List<FieldBase>(){}),
-							new CalcFieldInfo(testFild, new List<FieldBase>(){}),
-	
+				
 					}
 				},
-				#endregion Fild1
+				#endregion changedField
 						
 				
 
 				
-				#region fild3
-                {"fild3", new List<CalcFieldInfo>()
-					{
-										new CalcFieldInfo(fild3_1, new List<FieldBase>(){}),
-							new CalcFieldInfo(testFild, new List<FieldBase>(){}),
-	
-					}
-				},
-				#endregion fild3
-						
-				
-
-				
-				#region testFild
-                {"testFild", new List<CalcFieldInfo>()
+				#region fld
+                {"fld", new List<CalcFieldInfo>()
 					{
 				
 					}
 				},
-				#endregion testFild
-						
-				
-
-				
-				#region fild3_1
-                {"fild3_1", new List<CalcFieldInfo>()
-					{
-				
-					}
-				},
-				#endregion fild3_1
+				#endregion fld
 						
 				
 
 				
 			
 			};//new Dictionary
-		 }
-	return calcOrder;
+		 
+			return calcOrder;
 		}
 	}
 		#endregion //define order
-				
-				
-	}
 }

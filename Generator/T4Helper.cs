@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ConsoleApp1.InfoClass;
+using GraphGeneratorUtil.InfoClass;
 
-namespace ConsoleApp1.Generator
+namespace GraphGeneratorUtil.Generator
 {
     partial class T4Generator
     {
@@ -38,6 +38,7 @@ namespace ConsoleApp1.Generator
             }
 
             BuildHierarhi(hierarhy);
+
         }
 
         /// <summary>
